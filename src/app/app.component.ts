@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
+import {AuthService} from "./services/auth.service";
 
 @Component({
   selector: 'app-root',
@@ -11,4 +12,10 @@ import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
   standalone: true,
   imports: [IonApp, IonRouterOutlet]
 })
-export class AppComponent {}
+export class AppComponent {
+  constructor(private authService: AuthService) {}
+
+  ngOnInit() {
+    this.authService.loadUserFromToken(); // <-- très important
+  }
+}

@@ -38,11 +38,19 @@ export class DashboardComponent implements OnInit {
     addIcons({ logOutOutline });
   }
 
-  ngOnInit() {
-    this.authService.currentUser$.subscribe(user => {
-      this.currentUser = user;
-    });
-  }
+
+    ngOnInit() {
+      this.authService.geCurrentUserDBInfo().subscribe(
+        userInfo => {
+          this.currentUser = userInfo; // Store the user info
+          console.log('Current User Info:', this.currentUser);
+        },
+        error => {
+          console.error('Error fetching user info:', error);
+        }
+      );
+    }
+
 
   async logout() {
     const alert = await this.alertController.create({

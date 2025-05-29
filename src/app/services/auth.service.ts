@@ -3,7 +3,7 @@ import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { environment } from "../../environments/environment";
 // @ts-ignore
-import jwt_decode, { JwtPayload, jwtDecode } from 'jwt-decode';
+import jwt_decode, { jwtDecode } from 'jwt-decode';
 import {Injectable} from "@angular/core"; // Ensure this import is present
 
 export interface LoginRequest {
@@ -16,12 +16,19 @@ export interface LoginResponse {
   token: string;
 }
 
+export interface JwtPayload {
+  sub: string; // email de l'utilisateur
+  roles: { authority: string }[];
+  iat: number;
+  exp: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private readonly API_URL = environment.apiUrl;
-  private currentUserSubject = new BehaviorSubject<any>(null);
+  private currentUserSubject = new BehaviorSubject<JwtPayload | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
   constructor(private http: HttpClient) {
@@ -44,12 +51,15 @@ export class AuthService {
           console.log('Decoded JWT:', decoded);
 
           this.currentUserSubject.next(decoded);
+          console.log(this.currentUserSubject.value?.sub)
         }
       }),
       catchError(this.handleError)
 
     );
   }
+
+
 
   // Other methods...
 
@@ -64,6 +74,24 @@ export class AuthService {
     return !!token;
   }
 
+
+  getCurrentUser(): JwtPayload | null {
+    return this.currentUserSubject.value;
+  }
+
+  loadUserFromToken(): void {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      try {
+        const decoded = jwtDecode<JwtPayload>(token);
+        this.currentUserSubject.next(decoded);
+      } catch (error) {
+        console.error('Failed to decode token:', error);
+        this.currentUserSubject.next(null);
+      }
+    }
+  }
+
   getToken(): string | null {
     return localStorage.getItem('authToken');
   }
@@ -72,6 +100,25 @@ export class AuthService {
     const userStr = localStorage.getItem('currentUser');
     return userStr ? JSON.parse(userStr) : null;
   }
+
+  getUserRole(): string | null {
+    const user = this.currentUserSubject.value;
+    return user?.roles[0]?.authority ?? null;
+  }
+
+  getUserEmail(): string | null {
+    return this.currentUserSubject.value?.sub ?? null;
+  }
+
+
+  geCurrentUserDBInfo (): Observable<any> {
+    const token = localStorage.getItem('authToken');
+    const headers = { 'Authorization': `Bearer ${token}` };
+    return this.http.get<any>(`${this.API_URL}/users/email/${this.getUserEmail()}`, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
 
   private handleError(error: HttpErrorResponse) {
     let errorMessage = 'Une erreur est survenue';

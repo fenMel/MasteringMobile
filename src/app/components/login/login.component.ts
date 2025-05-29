@@ -53,6 +53,9 @@ export class LoginComponent {
         if (response.token) {
           await this.showToast('Connexion réussie!', 'success');
           await this.router.navigate(['/dashboard']);
+          console.log(this.authService.getUserEmail())
+          console.log(this.authService.getUserRole())
+
         } else {
           await this.showAlert('Erreur', response.message || 'Erreur de connexion');
         }

@@ -69,6 +69,7 @@ export class LoginComponent {
       header,
       message,
       buttons: ['OK']
+
     });
     await alert.present();
   }

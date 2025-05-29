@@ -46,10 +46,8 @@ export class AuthService {
           this.currentUserSubject.next(decoded);
         }
       }),
-      catchError(error => {
-        console.error('Login failed:', error);
-        return throwError(() => error);
-      })
+      catchError(this.handleError)
+
     );
   }
 
@@ -80,9 +78,11 @@ export class AuthService {
 
     if (error.error instanceof ErrorEvent) {
       // Client-side error
-      errorMessage = `Erreur: ${error.error.message}`;
     } else {
       // Server-side error
+      console.log('Erreur connexion:', error.message);
+
+
       switch (error.status) {
         case 401:
           errorMessage = 'Email ou mot de passe incorrect';

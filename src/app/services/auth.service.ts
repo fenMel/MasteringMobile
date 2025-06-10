@@ -15,7 +15,10 @@ export class AuthService {
   public username: any;
   private currentUser: any = null;
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router) {
+    this.loadSessionData();
+    
+  }
 
   isBrowser(): boolean {
     return typeof window !== 'undefined' && typeof sessionStorage !== 'undefined';
@@ -258,9 +261,8 @@ export class AuthService {
   logout() {
     localStorage.removeItem('access_token');
     localStorage.removeItem('currentUser');
-    this.currentUser = null;
     this.jwtToken = null;
-    this.router.navigateByUrl('/login');
+    this.currentUser = null;
   }
 
   // Pour compatibilité avec certains guards

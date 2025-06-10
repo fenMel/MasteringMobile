@@ -13,9 +13,11 @@ import {AuthService} from "./services/auth.service";
   imports: [IonApp, IonRouterOutlet]
 })
 export class AppComponent implements OnInit {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) {
+      this.authService.loadUserFromToken();
+
+  }
 
   ngOnInit() {
-    this.authService.loadUserFromToken();
   }
 }

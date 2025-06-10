@@ -1,5 +1,23 @@
-import { Component } from '@angular/core';
-import {IonicModule} from "@ionic/angular";
+import { Component, ViewChild } from '@angular/core';
+import {
+  IonMenu,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+  IonButtons,
+  IonMenuButton,
+  IonItem,
+  IonIcon,
+  IonLabel,
+  IonApp,
+  IonBadge,
+  IonButton,
+  IonList,
+  IonAvatar,
+  IonSplitPane
+} from '@ionic/angular/standalone';
+import { EvaluationComponent } from '../evaluation/evaluation.component';
 
 @Component({
   selector: 'app-jury-dashboard',
@@ -7,12 +25,30 @@ import {IonicModule} from "@ionic/angular";
   styleUrls: ['./jury-dashboard.component.scss'],
   standalone: true,
   imports: [
-    IonicModule
+    IonMenu,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonContent,
+    IonButtons,
+    IonMenuButton,
+    IonItem,
+    IonIcon,
+    IonLabel,
+    IonApp,
+    IonBadge,
+    IonButton,
+    IonList,
+    IonAvatar,
+    IonSplitPane,
+    EvaluationComponent
   ]
-
 })
-
 export class JuryDashboardComponent {
+  juryName = 'Nom Jury'; // À remplacer par la vraie donnée si besoin
+
+  @ViewChild(IonMenu) menu!: IonMenu;
+
   logout() {
     localStorage.clear();
     window.location.href = '/login';

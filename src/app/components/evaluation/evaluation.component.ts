@@ -6,6 +6,7 @@ import { IonIcon, IonButton, IonCard, IonCardContent, IonInput, IonBadge, IonSeg
 
 import { Evaluation, FiltresEvaluation } from './evaluation.model';
 import { EvaluationService } from '../../services/evaluation.service';
+import { IonSpinner } from '@ionic/angular';
 
 @Component({
   standalone: true,
@@ -25,6 +26,7 @@ import { EvaluationService } from '../../services/evaluation.service';
     IonSegmentButton,
     IonList,
     IonItem
+    
   ]
 })
 export class EvaluationComponent implements OnInit {
@@ -206,16 +208,7 @@ return filtered.slice(debut, fin);
     this.evaluationService.setSelectedEvaluationId(evaluation.id);
     this.evaluationService.setViewMode(false);
 
-    if (this.setSousMenu) {
-      this.setSousMenu('ajouter-evaluation');
-    } else {
-      this.router.navigate(['/dashboard'], {
-        queryParams: {
-          menu: 'soutenances',
-          sousMenu: 'ajouter-evaluation',
-        }
-      });
-    }
+    this.router.navigate(['/ajouter-evaluation', evaluation.id]);
   }
 
   voirEvaluation(evaluation: any): void {
@@ -243,13 +236,7 @@ return filtered.slice(debut, fin);
         }
       );
 
-      if (this.setSousMenu) {
-        this.setSousMenu('ajouter-evaluation');
-      } else {
-        this.router.navigate(['/dashboard'], {
-          queryParams: { menu: 'soutenances', sousMenu: 'ajouter-evaluation' }
-        });
-      }
+      this.router.navigate(['/ajouter-evaluation', evaluation.id, { mode: 'voir' }]);
     } else {
       console.error('L\'évaluation ne contient pas d\'ID ou de candidatId valide');
     }

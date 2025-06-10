@@ -1,9 +1,7 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from "./guards/AuthGuard";
-import { RoleGuard } from './guards/role.guard';
-import { ParametersComponent } from './components/parameters/parameters.component';
-import { ProfileComponent } from './components/profile/profile.component';
-import {NoAuthGuard} from "./guards/NoAuthGuard";
+// import { RoleGuard } from './guards/role.guard';
+// import { NoAuthGuard } from "./guards/NoAuthGuard";
 
 // @ts-ignore
 export const routes: Routes = [
@@ -14,16 +12,14 @@ export const routes: Routes = [
   },
   {
     path: 'login',
-
     loadComponent: () => import('./components/login/login.component').then(m => m.LoginComponent),
-    canActivate: [NoAuthGuard]
+    // canActivate: [NoAuthGuard]
   },
   {
     path: 'dashboard',
     loadComponent: () => import('./components/dashboard/dashboard.component').then(m => m.DashboardComponent),
     canActivate: [AuthGuard],
     pathMatch: "full"
-
   },
   {
     path: 'welcome',
@@ -44,26 +40,28 @@ export const routes: Routes = [
   {
     path: 'coordinator-dashboard',
     loadComponent: () => import('./components/coordinator-dashboard/coordinator-dashboard.component').then(m => m.CoordinatorDashboardComponent),
-    canActivate: [AuthGuard, RoleGuard],
-    data: { roles: ['CORDINATEUR'] },
+    canActivate: [AuthGuard],
     pathMatch: "full",
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-      { path: 'profile', component: ProfileComponent },
-      { path: 'parametres', component: ParametersComponent },
+      { path: 'profile', loadComponent: () => import('./components/profile/profile.component').then(m => m.ProfileComponent) },
+      { path: 'parametres', loadComponent: () => import('./components/parameters/parameters.component').then(m => m.ParametersComponent) },
     ]
   },
   {
     path: 'candidat-dashboard',
     loadComponent: () => import('./components/candidat-dashboard/candidat-dashboard.component').then(m => m.CandidatDashboardComponent),
-    canActivate: [AuthGuard, RoleGuard],
-    data: { roles: ['CANDIDAT'] }
+    canActivate: [AuthGuard]
   },
   {
     path: 'jury-dashboard',
     loadComponent: () => import('./components/jury-dashboard/jury-dashboard.component').then(m => m.JuryDashboardComponent),
-    canActivate: [AuthGuard, RoleGuard],
-    data: { roles: ['JURY'] }
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'ajouter-evaluation/:id',
+    loadComponent: () => import('./components/ajouter-evaluation/ajouter-evaluation.component').then(m => m.AjouterEvaluationComponent),
+    canActivate: [AuthGuard]
   },
   {
     path: 'unauthorized',

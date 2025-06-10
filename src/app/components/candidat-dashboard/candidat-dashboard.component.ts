@@ -22,7 +22,7 @@ import {
   IonCardContent,
   IonCardTitle,
   IonCardSubtitle
-} from '@ionic/angular/standalone';
+} from '@ionic/angular/standalone';  
 import {
   person, folder, calendar, notifications, settings, logOut,
   documentText, time, checkmarkCircle, briefcase, business,

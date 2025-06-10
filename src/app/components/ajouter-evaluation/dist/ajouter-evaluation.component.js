@@ -18,7 +18,7 @@ var button_1 = require("@angular/material/button");
 var confirmation_dialog_component_1 = require("../confirmation-dialog/confirmation-dialog.component");
 var standalone_1 = require("@ionic/angular/standalone");
 var AjouterEvaluationComponent = /** @class */ (function () {
-    function AjouterEvaluationComponent(fb, router, route, evaluationService, authService, snackBar, dialog) {
+    function AjouterEvaluationComponent(fb, router, route, evaluationService, authService, snackBar, dialog, location) {
         this.fb = fb;
         this.router = router;
         this.route = route;
@@ -26,6 +26,7 @@ var AjouterEvaluationComponent = /** @class */ (function () {
         this.authService = authService;
         this.snackBar = snackBar;
         this.dialog = dialog;
+        this.location = location;
         this.candidat = {};
         this.loading = true;
         this.error = null;
@@ -409,7 +410,7 @@ var AjouterEvaluationComponent = /** @class */ (function () {
                 error: function (err) { return console.error('Erreur lors de la mise à jour de la décision:', err); }
             });
         }
-        this.retourListe(true);
+        this.retourListe();
     };
     AjouterEvaluationComponent.prototype.handleDeleteError = function (err) {
         console.error('Erreur suppression:', err);
@@ -421,16 +422,8 @@ var AjouterEvaluationComponent = /** @class */ (function () {
         this.isDeleting = false;
         console.log('État suppression réinitialisé');
     };
-    AjouterEvaluationComponent.prototype.retourListe = function (suppressionSuccess) {
-        if (suppressionSuccess === void 0) { suppressionSuccess = false; }
-        console.log('Navigating back to list...');
-        if (this.setSousMenu) {
-            this.setSousMenu('liste');
-        }
-        else {
-            // Passe suppressionSuccess dans les queryParams
-            this.router.navigate(['/dashboard'], { queryParams: { menu: 'soutenances', suppressionSuccess: suppressionSuccess ? 1 : 0 } });
-        }
+    AjouterEvaluationComponent.prototype.retourListe = function () {
+        this.location.back();
     };
     __decorate([
         core_1.Input()
@@ -465,7 +458,9 @@ var AjouterEvaluationComponent = /** @class */ (function () {
                 standalone_1.IonItemDivider,
                 standalone_1.IonGrid,
                 standalone_1.IonRow,
-                standalone_1.IonCol
+                standalone_1.IonCol,
+                standalone_1.IonTextarea,
+                standalone_1.IonInput
             ]
         })
     ], AjouterEvaluationComponent);

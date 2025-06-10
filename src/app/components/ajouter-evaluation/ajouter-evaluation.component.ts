@@ -28,8 +28,11 @@ import {
   IonItemDivider,
   IonGrid,
   IonRow,
-  IonCol
+  IonCol,
+  IonTextarea,
+  IonInput
 } from '@ionic/angular/standalone';
+import { Location } from '@angular/common';
 
 interface Candidat {
   id: number;
@@ -87,7 +90,9 @@ interface Evaluation {
     IonItemDivider,
     IonGrid,
     IonRow,
-    IonCol
+    IonCol,
+    IonTextarea,
+    IonInput
   ],
 })
 export class AjouterEvaluationComponent implements OnInit, OnDestroy {
@@ -115,9 +120,8 @@ export class AjouterEvaluationComponent implements OnInit, OnDestroy {
     private evaluationService: EvaluationService,
     public authService: AuthService,
     private snackBar: MatSnackBar,
-    
-
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private location: Location
   ) {
     this.evaluationForm = this.fb.group({
       note_clarte: ['', [Validators.required, Validators.min(0), Validators.max(20)]],
@@ -437,7 +441,7 @@ export class AjouterEvaluationComponent implements OnInit, OnDestroy {
 
   
 
-  modifierEvaluation(): void {
+  modifierEvaluation() {
     this.modeVoir = false;
     this.evaluationForm.enable();
     console.log('Mode set to Modifier. Form enabled.');
@@ -525,7 +529,7 @@ private handleDeleteSuccess(): void {
     });
   }
 
-  this.retourListe(true);
+  this.retourListe();
 }
 
 private handleDeleteError(err: any): void {
@@ -539,16 +543,7 @@ private resetDeleteState(): void {
   this.isDeleting = false;
   console.log('État suppression réinitialisé');
 }
-  retourListe(suppressionSuccess: boolean = false): void {
-    console.log('Navigating back to list...');
-    if (this.setSousMenu) {
-      this.setSousMenu('liste');
-    } else {
-      // Passe suppressionSuccess dans les queryParams
-      this.router.navigate(
-        ['/dashboard'],
-        { queryParams: { menu: 'soutenances', suppressionSuccess: suppressionSuccess ? 1 : 0 } }
-      );
-    }
-  }
+retourListe(): void {
+  this.location.back();
+}
 }

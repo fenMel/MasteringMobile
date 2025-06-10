@@ -56,6 +56,7 @@ var AuthService = /** @class */ (function () {
         this.currentUserSubject = {
             value: this.getCurrentUser()
         };
+        this.loadSessionData();
     }
     AuthService.prototype.isBrowser = function () {
         return typeof window !== 'undefined' && typeof sessionStorage !== 'undefined';
@@ -287,9 +288,8 @@ var AuthService = /** @class */ (function () {
     AuthService.prototype.logout = function () {
         localStorage.removeItem('access_token');
         localStorage.removeItem('currentUser');
-        this.currentUser = null;
         this.jwtToken = null;
-        this.router.navigateByUrl('/login');
+        this.currentUser = null;
     };
     AuthService = __decorate([
         core_1.Injectable({

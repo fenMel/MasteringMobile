@@ -1,0 +1,64 @@
+<ion-app>
+  <ion-content class="access-denied-content" [fullscreen]="true">
+    <!-- Background with gradient overlay -->
+    <div class="background-container">
+      <div class="gradient-overlay"></div>
+    </div>
+
+    <!-- Main content -->
+    <div class="content-wrapper">
+      <div class="error-container">
+        <!-- Lock icon with animation -->
+        <div class="icon-container">
+          <ion-icon name="lock-closed" class="lock-icon"></ion-icon>
+          <div class="pulse-ring"></div>
+        </div>
+
+        <!-- Error code -->
+        <div class="error-code">403</div>
+
+        <!-- Main title -->
+        <ion-text class="main-title">
+          <h1>Accès interdit</h1>
+        </ion-text>
+
+        <!-- Subtitle -->
+        <ion-text class="subtitle">
+          <p>Vous n'avez pas les autorisations nécessaires pour accéder à cette page.</p>
+        </ion-text>
+
+        <!-- Action buttons -->
+        <div class="button-container">
+          <ion-button
+            fill="solid"
+            shape="round"
+            size="default"
+            color="primary"
+            (click)="goHome()"
+            class="primary-button">
+            <ion-icon name="log-in" slot="start"></ion-icon>
+            Se connecter
+          </ion-button>
+
+          <ion-button
+            fill="outline"
+            shape="round"
+            size="default"
+            color="medium"
+
+            class="secondary-button">
+            <ion-icon name="arrow-back" slot="start"></ion-icon>
+            Retour
+          </ion-button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Decorative elements -->
+    <div class="floating-shapes">
+      <div class="shape shape-1"></div>
+      <div class="shape shape-2"></div>
+      <div class="shape shape-3"></div>
+    </div>
+  </ion-content>
+</ion-app>

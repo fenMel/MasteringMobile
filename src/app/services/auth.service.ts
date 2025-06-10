@@ -1,10 +1,12 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError, BehaviorSubject } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
-import { environment } from "../../environments/environment";
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {BehaviorSubject, Observable, throwError} from 'rxjs';
+import {catchError, tap} from 'rxjs/operators';
+import {environment} from "../../environments/environment";
 // @ts-ignore
-import jwt_decode, { jwtDecode } from 'jwt-decode';
-import {Injectable} from "@angular/core"; // Ensure this import is present
+import jwt_decode, {jwtDecode} from 'jwt-decode';
+import {Injectable} from "@angular/core";
+import {Router} from "@angular/router";
+import {UserRole} from "../constants/roles.enum"; // Ensure this import is present
 
 export interface LoginRequest {
   email: string;
@@ -28,10 +30,10 @@ export interface JwtPayload {
 })
 export class AuthService {
   private readonly API_URL = environment.apiUrl;
-  private currentUserSubject = new BehaviorSubject<JwtPayload | null>(null);
+  currentUserSubject = new BehaviorSubject<JwtPayload | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private router : Router) {
     // Check if user is already logged in
     const storedUser = this.getStoredUser();
     if (storedUser) {
@@ -67,6 +69,30 @@ export class AuthService {
     localStorage.removeItem('authToken');
     localStorage.removeItem('currentUser');
     this.currentUserSubject.next(null);
+  }
+
+  async redirectUserByRole() {
+    const currentRole = this.getUserRole()
+    if (!currentRole) {
+      await this.router.navigate(['/login']);
+      return;
+    }
+    const role : UserRole = currentRole as UserRole
+
+    switch (role) {
+      case UserRole.Coordinator:
+        await this.router.navigate(['/coordinator-dashboard']);
+        break;
+      case UserRole.Candidat:
+        await this.router.navigate(['/candidat-dashboard']);
+        break;
+      case UserRole.Jury:
+        await this.router.navigate(['/jury-dashboard']);
+        break;
+      default:
+        await this.router.navigate(['/login']); // fallback
+        break;
+    }
   }
 
   isAuthenticated(): boolean {

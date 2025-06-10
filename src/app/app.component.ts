@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
 import {AuthService} from "./services/auth.service";
 
@@ -12,10 +12,10 @@ import {AuthService} from "./services/auth.service";
   standalone: true,
   imports: [IonApp, IonRouterOutlet]
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   constructor(private authService: AuthService) {}
 
   ngOnInit() {
-    this.authService.loadUserFromToken(); // <-- très important
+    this.authService.loadUserFromToken();
   }
 }

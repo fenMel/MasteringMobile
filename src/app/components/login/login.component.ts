@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -22,10 +22,11 @@ import {AuthService, LoginRequest} from "../../services/auth.service";
     IonSpinner
   ]
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit{
   email: string = '';
   password: string = '';
   isLoading: boolean = false;
+  role: string | null = '';
 
   constructor(
     private authService: AuthService,
@@ -34,7 +35,12 @@ export class LoginComponent {
     private toastController: ToastController
   ) {}
 
+    ngOnInit() {
+
+   }
+
   async onLogin() {
+
     if (!this.email || !this.password) {
       await this.showAlert('Erreur', 'Veuillez remplir tous les champs');
       return;
@@ -51,10 +57,11 @@ export class LoginComponent {
       next: async (response) => {
         this.isLoading = false;
         if (response.token) {
+          this.authService.loadUserFromToken();
+           this.role = this.authService.getUserRole();
+           console.log(this.role);
           await this.showToast('Connexion réussie!', 'success');
-          await this.router.navigate(['/dashboard']);
-          console.log(this.authService.getUserEmail())
-          console.log(this.authService.getUserRole())
+          await this.router.navigate(['/welcome']);
 
         } else {
           await this.showAlert('Erreur', response.message || 'Erreur de connexion');
@@ -65,6 +72,8 @@ export class LoginComponent {
         await this.showAlert('Erreur de connexion', error);
       }
     });
+
+
   }
 
   private async showAlert(header: string, message: string) {

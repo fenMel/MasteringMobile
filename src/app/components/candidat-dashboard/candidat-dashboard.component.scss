@@ -1,0 +1,551 @@
+// Variables
+:root {
+  --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --success-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  --warning-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  --tertiary-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  --glass-bg: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.2);
+}
+
+// Menu Styles
+.modern-menu {
+  --background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+
+  .menu-header {
+    --background: transparent;
+
+    .menu-profile {
+      display: flex;
+      align-items: center;
+      padding: 1.5rem 1rem;
+      gap: 1rem;
+
+      .profile-avatar {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+
+        ion-icon {
+          font-size: 1.8rem;
+          color: white;
+        }
+      }
+
+      .profile-info {
+        h3 {
+          color: white;
+          margin: 0;
+          font-size: 1.2rem;
+          font-weight: 600;
+        }
+
+        p {
+          color: rgba(255, 255, 255, 0.8);
+          margin: 0;
+          font-size: 0.9rem;
+        }
+      }
+    }
+  }
+
+  .menu-content {
+    --background: transparent;
+
+    .menu-section {
+      margin: 1rem 0;
+
+      h4 {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin: 0 1rem 0.5rem 1rem;
+        font-weight: 600;
+      }
+
+      .menu-list {
+        background: transparent;
+
+        .menu-item {
+          --background: transparent;
+          --color: rgba(255, 255, 255, 0.9);
+          --border-radius: 12px;
+          --padding-start: 1rem;
+          --padding-end: 1rem;
+          margin: 0.25rem 1rem;
+          transition: all 0.3s ease;
+
+          ion-icon {
+            color: rgba(255, 255, 255, 0.8);
+            margin-right: 0.5rem;
+          }
+
+          &:hover {
+            --background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+          }
+
+          &.active {
+            --background: rgba(255, 255, 255, 0.2);
+            --color: white;
+
+            ion-icon {
+              color: white;
+            }
+          }
+
+          &.logout-item {
+            --color: #ff6b6b;
+
+            ion-icon {
+              color: #ff6b6b;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Header Styles
+.modern-header {
+  --background: #2d5d8b;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+
+  .header-toolbar {
+    --background: #2d5d8b;
+    --color: white;
+    padding: 0.5rem 0;
+
+    .menu-toggle {
+      --color: white;
+      --background: rgba(255, 255, 255, 0.1);
+      --border-radius: 12px;
+      width: 44px;
+      height: 44px;
+    }
+
+    .header-title {
+      flex: 1;
+      text-align: center;
+
+      h1 {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: white;
+      }
+
+      p {
+        margin: 0;
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.8);
+      }
+    }
+
+    .notification-btn {
+      --color: white;
+      --background: rgba(255, 255, 255, 0.1);
+      --border-radius: 12px;
+      width: 44px;
+      height: 44px;
+      position: relative;
+
+      .notification-badge {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        --background: #ff6b6b;
+        --color: white;
+        font-size: 0.7rem;
+        min-width: 16px;
+        height: 16px;
+      }
+    }
+  }
+}
+
+// Content Styles
+.dashboard-content {
+  --background: #f8fafc;
+  --padding-top: 0;
+  --padding-bottom: 0;
+  --padding-start: 0;
+  --padding-end: 0;
+}
+
+.welcome-section {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 2rem 1rem;
+  margin-bottom: 1rem;
+  margin-top: 50px;
+
+
+  .welcome-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+
+    .welcome-content {
+      flex: 1;
+
+      h2 {
+        color: white;
+        margin: 0 0 0.5rem 0;
+        font-size: 1.4rem;
+        font-weight: 600
+      }
+
+      p {
+        color: rgba(255, 255, 255, 0.8);
+        margin: 0;
+        font-size: 0.9rem;
+        line-height: 1.4;
+      }
+    }
+
+    .welcome-illustration {
+      ion-icon {
+        font-size: 3rem;
+        color: rgba(255, 255, 255, 0.6);
+      }
+    }
+  }
+}
+
+.stats-section {
+  padding: 0 1rem 1rem 1rem;
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+
+    .stat-card {
+      background: white;
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: var(--card-shadow);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      transition: transform 0.3s ease;
+
+      &:hover {
+        transform: translateY(-4px);
+      }
+
+      .stat-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        ion-icon {
+          font-size: 1.5rem;
+          color: white;
+        }
+      }
+
+      .stat-content {
+        h3 {
+          margin: 0;
+          font-size: 1.8rem;
+          font-weight: 700;
+          color: #1a1a1a;
+        }
+
+        p {
+          margin: 0;
+          font-size: 0.8rem;
+          color: #666;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+      }
+
+      &.primary .stat-icon {
+        background: var(--primary-gradient);
+      }
+
+      &.success .stat-icon {
+        background: var(--success-gradient);
+      }
+
+      &.warning .stat-icon {
+        background: var(--warning-gradient);
+      }
+
+      &.tertiary .stat-icon {
+        background: var(--tertiary-gradient);
+      }
+    }
+  }
+}
+
+.section {
+  padding: 0 1rem 1.5rem 1rem;
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+
+    h3 {
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+
+    ion-button {
+      --color: #667eea;
+      font-size: 0.9rem;
+    }
+  }
+}
+
+.quick-actions-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+
+  .action-card {
+    background: white;
+    border-radius: 16px;
+    padding: 1rem;
+    box-shadow: var(--card-shadow);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-left: 4px solid transparent;
+
+    &:hover {
+      transform: translateX(4px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .action-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      ion-icon {
+        font-size: 1.5rem;
+        color: white;
+      }
+    }
+
+    .action-content {
+      flex: 1;
+
+      h4 {
+        margin: 0 0 0.25rem 0;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #1a1a1a;
+      }
+
+      p {
+        margin: 0;
+        font-size: 0.85rem;
+        color: #666;
+      }
+    }
+
+    .action-arrow {
+      color: #ccc;
+      font-size: 1.2rem;
+    }
+
+    &.primary {
+      border-left-color: #667eea;
+      .action-icon {
+        background: var(--primary-gradient);
+      }
+    }
+
+    &.success {
+      border-left-color: #11998e;
+      .action-icon {
+        background: var(--success-gradient);
+      }
+    }
+
+    &.tertiary {
+      border-left-color: #4facfe;
+      .action-icon {
+        background: var(--tertiary-gradient);
+      }
+    }
+
+    &.warning {
+      border-left-color: #f093fb;
+      .action-icon {
+        background: var(--warning-gradient);
+      }
+    }
+  }
+}
+
+.applications-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  .application-card {
+    background: white;
+    border-radius: 16px;
+    padding: 1rem;
+    box-shadow: var(--card-shadow);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    .app-logo {
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      ion-icon {
+        font-size: 1.5rem;
+        color: white;
+      }
+    }
+
+    .app-content {
+      flex: 1;
+
+      h4 {
+        margin: 0 0 0.25rem 0;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #1a1a1a;
+      }
+
+      p {
+        margin: 0 0 0.25rem 0;
+        font-size: 0.9rem;
+        color: #666;
+      }
+
+      small {
+        color: #999;
+        font-size: 0.8rem;
+      }
+    }
+
+    .status-chip {
+      --border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+  }
+}
+
+.bottom-spacing {
+  height: 2rem;
+}
+
+// Responsive Design
+@media (min-width: 768px) {
+  .stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .quick-actions-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .welcome-section {
+    padding: 2rem;
+  }
+
+  .section {
+    padding: 0 2rem 1.5rem 2rem;
+  }
+
+  .stats-section {
+    padding: 0 2rem 1rem 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .quick-actions-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+// Animations
+@keyframes slideInUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.stat-card,
+.action-card,
+.application-card {
+  animation: slideInUp 0.6s ease-out;
+}
+
+.stat-card:nth-child(1) { animation-delay: 0.1s; }
+.stat-card:nth-child(2) { animation-delay: 0.2s; }
+.stat-card:nth-child(3) { animation-delay: 0.3s; }
+.stat-card:nth-child(4) { animation-delay: 0.4s; }
+
+// Dark mode support
+@media (prefers-color-scheme: dark) {
+  .dashboard-content {
+    --background: #1a1a2e;
+  }
+
+  .stat-card,
+  .action-card,
+  .application-card {
+    background: #16213e;
+    color: white;
+
+    h3, h4 {
+      color: white;
+    }
+
+    p {
+      color: rgba(255, 255, 255, 0.7);
+    }
+  }
+
+  .section-header h3 {
+    color: white;
+  }
+}

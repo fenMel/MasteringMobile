@@ -36,16 +36,33 @@
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 
 
-:root {
-  --ion-color-primary: #3880ff;
+// Light theme variables mixin
+@mixin light-theme() {
+  --ion-color-primary: #2d5d8b;
   --ion-color-primary-rgb: 56, 128, 255;
   --ion-color-primary-contrast: #ffffff;
+  --ion-background-color: #ffffff;
+  --ion-background-color-rgb: 255, 255, 255;
+  --ion-text-color: #000000;
+  --ion-text-color-rgb: 0, 0, 0;
+  --ion-item-background: #ffffff;
+  --ion-card-background: #ffffff;
+  --ion-toolbar-background: #f8f9fa;
+  --ion-tab-bar-background: #f8f9fa;
+  --ion-border-color: #dee2e6;
 }
+
+:root {
+  @include light-theme();
+}
+
+
+
+
 
 /* Disable dark mode media query */
 @media (prefers-color-scheme: dark) {
   :root {
-    /* Keep light theme variables here */
+    @include light-theme();
   }
 }
-

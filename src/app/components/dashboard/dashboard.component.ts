@@ -30,6 +30,7 @@ import {AuthService} from "../../services/auth.service";
 export class DashboardComponent implements OnInit {
   currentUser: any = null;
 
+
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -49,6 +50,7 @@ export class DashboardComponent implements OnInit {
           console.error('Error fetching user info:', error);
         }
       );
+      console.log()
     }
 
 

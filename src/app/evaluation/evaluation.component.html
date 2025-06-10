@@ -1,0 +1,71 @@
+<ion-segment [(ngModel)]="ongletActif" class="custom-segment">
+  <ion-segment-button value="aEvaluer">
+    À évaluer
+  </ion-segment-button>
+  <ion-segment-button value="evalues">
+    Évalués
+  </ion-segment-button>
+</ion-segment>
+
+<ion-item lines="none" class="search-bar">
+  <ion-input
+    [(ngModel)]="filtres.candidat"
+    placeholder="Rechercher un candidat…"
+    (keyup.enter)="appliquerFiltres()">
+  </ion-input>
+  <ion-button fill="clear" *ngIf="filtres.candidat" slot="end" (click)="nettoyerRecherche()">
+    <ion-icon name="close"></ion-icon>
+  </ion-button>
+</ion-item>
+
+<ion-list>
+  <ion-card *ngFor="let evaluation of evaluationsAffichees">
+    <ion-card-content class="eval-card-content">
+      <div class="eval-header">
+        <span class="eval-nom"><strong>{{ evaluation.candidat.nom }} {{ evaluation.candidat.prenom }}</strong></span>
+        <ion-badge [color]="evaluation.statut === 'Évalué' ? 'success' : 'danger'" class="eval-badge">
+          {{ evaluation.statut === 'Évalué' ? 'Évalué' : 'No Évaluer' }}
+        </ion-badge>
+      </div>
+      <div class="eval-date">
+        Date : {{ evaluation.dateHeure | date:'dd/MM/yyyy - HH:mm' }}
+      </div>
+      <ion-button
+        expand="block"
+        color="primary"
+        *ngIf="evaluation.statut !== 'Évalué'"
+        (click)="evaluer(evaluation)">
+        Évaluer
+      </ion-button>
+      <ion-button
+        expand="block"
+        color="medium"
+        *ngIf="evaluation.statut === 'Évalué'"
+        (click)="voirEvaluation(evaluation)">
+        Voir
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+</ion-list>
+
+<div class="pagination">
+  <span>
+    Page de {{ (pageActuelle - 1) * evaluationsParPage + 1 }}-{{ Math.min(pageActuelle * evaluationsParPage, totalEvaluations) }} sur {{ totalEvaluations }} soutenances
+  </span>
+  <div class="pagination-controls">
+    <ion-button size="small" fill="clear" [disabled]="pageActuelle === 1" (click)="changerPage(pageActuelle - 1)">
+      <ion-icon name="chevron-back"></ion-icon>
+    </ion-button>
+    <ion-button
+      size="small"
+      fill="solid"
+      *ngFor="let page of pages"
+      [color]="page === pageActuelle ? 'primary' : 'light'"
+      (click)="changerPage(page)">
+      {{ page }}
+    </ion-button>
+    <ion-button size="small" fill="clear" [disabled]="pageActuelle === pages.length" (click)="changerPage(pageActuelle + 1)">
+      <ion-icon name="chevron-forward"></ion-icon>
+    </ion-button>
+  </div>
+</div>

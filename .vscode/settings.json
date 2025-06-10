@@ -1,3 +1,11 @@
 {
-  "typescript.preferences.autoImportFileExcludePatterns": ["@ionic/angular/common", "@ionic/angular"]
+<<<<<<< HEAD
+  "typescript.preferences.autoImportFileExcludePatterns": [
+    "@ionic/angular/common",
+    "@ionic/angular"
+  ],
+  "compile-hero.disable-compile-files-on-did-save-code": false
+=======
+  "typescript.preferences.autoImportFileExcludePatterns": ["@ionic/angular/common", "@ionic/angular/standalone"]
+>>>>>>> feature/ajout_composant_de_navigation
 }

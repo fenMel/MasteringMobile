@@ -1,7 +1,7 @@
 {
-  "name": "masteringMobile",
+  "name": "modern-app",
   "integrations": {
     "capacitor": {}
   },
-  "type": "angular-standalone"
+  "type": "angular"
 }

@@ -1,0 +1,58 @@
+<ion-content [fullscreen]="true" class="graduation-content">
+  <div class="graduation-container">
+    <!-- Graduation Background -->
+    <div class="graduation-background">
+      <div class="stage-lights">
+        <div class="light light-1"></div>
+        <div class="light light-2"></div>
+        <div class="light light-3"></div>
+      </div>
+      <div class="gradient-overlay"></div>
+    </div>
+
+    <!-- Confetti Animation -->
+
+
+    <!-- Main Graduation Content -->
+    <div class="content-wrapper">
+      <!-- MASTERING Logo -->
+      <div class="mastering-logo">
+        <!-- Graduation Cap Icon (SVG version of your logo) -->
+
+
+        <!-- MASTERING Text -->
+        <div class="logo-text" [class.show]="showWelcomeText">
+          <h1 class="mastering-title">MASTERING</h1>
+        </div>
+      </div>
+
+      <!-- Welcome Message -->
+      <div class="text-content">
+        <p
+          class="welcome-message"
+          [class.show]="showSubText"
+        >
+          Votre soutenance, notre préocupation
+        </p>
+      </div>
+
+      <!--  Button -->
+
+    </div>
+
+    <!-- Celebration particles -->
+    <div class="celebration-particles">
+      <div class="particle" *ngFor="let i of [1,2,3,4,5,6,7,8]"
+           [style.--delay]="i * 0.3 + 's'"
+           [style.--duration]="(3 + i * 0.5) + 's'">
+        🖊️
+      </div>
+    </div>
+
+    <!-- Progress indicator -->
+    <div class="graduation-progress">
+      <div class="progress-cap">🎓</div>
+      <div class="progress-text">Préparation de votre espace...</div>
+    </div>
+  </div>
+</ion-content>

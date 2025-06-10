@@ -1,0 +1,67 @@
+<ion-content class="login-content">
+  <div class="login-container">
+    <!-- Logo Section -->
+    <div class="logo-section">
+      <div class="logo-icon">
+        <img src="../../assets/logo.svg" alt="Description of the icon" class="logo-icon" >
+
+      </div>
+    </div>
+
+    <!-- Login Form -->
+    <div class="form-section">
+      <h2 class="form-title">Se connecter</h2>
+
+      <form class="login-form" (ngSubmit)="onLogin()" #loginForm="ngForm">
+        <!-- Email Input -->
+        <ion-item class="custom-item">
+          <ion-label position="stacked">Email</ion-label>
+          <ion-input
+            type="email"
+            [(ngModel)]="email"
+            name="email"
+            placeholder="Entrez votre email"
+            required
+            email>
+          </ion-input>
+        </ion-item>
+
+        <!-- Password Input -->
+        <ion-item class="custom-item">
+          <ion-label position="stacked">Mot de passe</ion-label>
+          <ion-input
+            type="password"
+            [(ngModel)]="password"
+            name="password"
+            placeholder="Entrez votre mot de passe"
+            required>
+          </ion-input>
+        </ion-item>
+
+        <!-- Login Button -->
+        <ion-button
+          expand="block"
+          class="login-button"
+          type="submit"
+          [disabled]="isLoading || loginForm.invalid">
+          <ion-spinner
+            name="crescent"
+            *ngIf="isLoading"
+            style="margin-right: 8px;">
+          </ion-spinner>
+          {{ isLoading ? 'Connexion...' : 'Se connecter' }}
+        </ion-button>
+
+        <!-- Footer Text -->
+        <div class="footer-text">
+          <ion-text color="medium">
+            <p>Pas encore de compte ? Contactez votre administrateur</p>
+          </ion-text>
+        </div>
+      </form>
+    </div>
+  </div>
+  <footer class="footer_0">
+
+  </footer>
+</ion-content>

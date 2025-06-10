@@ -1,0 +1,109 @@
+.parameters-content {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  --padding-start: 0;
+  --padding-end: 0;
+}
+
+.user-info-card {
+  background: white;
+  margin: 16px;
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.user-avatar {
+  font-size: 60px;
+  color: var(--ion-color-primary);
+}
+
+.user-details h2 {
+  margin: 0 0 8px 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #2d3748;
+}
+
+.user-details p {
+  margin: 0 0 12px 0;
+  color: #64748b;
+  font-size: 16px;
+}
+
+.settings-sections {
+  padding: 0 16px;
+}
+
+.setting-section {
+  margin-bottom: 24px;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #2d3748;
+  margin: 0 0 12px 0;
+  padding: 0 4px;
+}
+
+.settings-list {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  margin: 0;
+}
+
+.settings-list ion-item {
+  --border-color: #f1f5f9;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --inner-padding-end: 8px;
+}
+
+.settings-list ion-item:first-child {
+  --border-radius: 16px 16px 0 0;
+}
+
+.settings-list ion-item:last-child {
+  --border-radius: 0 0 16px 16px;
+  --border-width: 0;
+}
+
+.save-section {
+  padding: 24px 16px;
+}
+
+.save-button {
+  --border-radius: 12px;
+  --padding-top: 16px;
+  --padding-bottom: 16px;
+  font-weight: 600;
+  text-transform: none;
+}
+
+.custom-header-toolbar {
+  --background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --color: white;
+  --border-color: transparent;
+  --min-height: 70px;
+  --padding-top: 8px;
+  --padding-bottom: 8px;
+  position: relative;
+}
+
+.active-menu-item {
+  --background: rgba(var(--ion-color-primary-rgb), 0.1);
+  --color: var(--ion-color-primary);
+}
+
+.logout-item {
+  margin-top: 20px;
+  --background: rgba(244, 63, 94, 0.1);
+  border-radius: 8px;
+}

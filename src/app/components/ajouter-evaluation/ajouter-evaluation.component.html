@@ -1,3 +1,191 @@
-<p>
-  ajouter-evaluation works!
-</p>
+<ion-content class="ion-padding">
+  <ion-spinner *ngIf="loading" name="crescent"></ion-spinner>
+
+  <ion-card *ngIf="!loading && !error">
+    <ion-card-header>
+      <ion-card-title>
+        Candidat : {{ candidat.nom }} {{ candidat.prenom }}
+      </ion-card-title>
+      <ion-card-subtitle>
+        Sujet : {{ candidat.sujet }}
+      </ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <ion-label>
+          <strong>Date et heure :</strong>
+          {{ candidat.dateHeure | date:'dd/MM/yyyy HH:mm' }}
+          <span *ngIf="candidat.salle">| <strong>Salle :</strong> {{ candidat.salle }}</span>
+        </ion-label>
+      </ion-item>
+      <ion-button expand="block" fill="outline" color="medium" (click)="retourListe()">
+        Retour à la liste
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="error">
+    <ion-card-content>
+      <ion-text color="danger">{{ error }}</ion-text>
+      <ion-button expand="block" (click)="retourListe()">Retour à la liste</ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <form *ngIf="!loading && !error" [formGroup]="evaluationForm" (ngSubmit)="validerEvaluation()">
+    <ion-list>
+      <ion-item-divider color="light">
+        <ion-label>Critères d'évaluation</ion-label>
+      </ion-item-divider>
+
+      <!-- Clarté -->
+      <ion-item>
+        <ion-label>
+          <strong>Clarté</strong>
+          <p>Clarté et structure de la présentation</p>
+        </ion-label>
+        <ion-badge slot="end" color="primary">{{ evaluationLoadedData?.coefClarte }}</ion-badge>
+        <ion-input
+          type="number"
+          min="0"
+          max="20"
+          formControlName="note_clarte"
+          placeholder="Note /20"
+          slot="end"
+          class="note-input">
+        </ion-input>
+      </ion-item>
+      <ion-note color="danger" *ngIf="evaluationForm.get('note_clarte')?.touched && evaluationForm.get('note_clarte')?.invalid">
+        Note requise (0-20)
+      </ion-note>
+
+      <!-- Contenu -->
+      <ion-item>
+        <ion-label>
+          <strong>Contenu</strong>
+          <p>Qualité et pertinence du contenu</p>
+        </ion-label>
+        <ion-badge slot="end" color="primary">{{ evaluationLoadedData?.coefContenu }}</ion-badge>
+        <ion-input
+          type="number"
+          min="0"
+          max="20"
+          formControlName="note_contenu"
+          placeholder="Note /20"
+          slot="end"
+          class="note-input">
+        </ion-input>
+      </ion-item>
+      <ion-note color="danger" *ngIf="evaluationForm.get('note_contenu')?.touched && evaluationForm.get('note_contenu')?.invalid">
+        Note requise (0-20)
+      </ion-note>
+
+      <!-- Pertinence -->
+      <ion-item>
+        <ion-label>
+          <strong>Pertinence</strong>
+          <p>Pertinence du sujet et des exemples</p>
+        </ion-label>
+        <ion-badge slot="end" color="primary">{{ evaluationLoadedData?.coefPertinence }}</ion-badge>
+        <ion-input
+          type="number"
+          min="0"
+          max="20"
+          formControlName="note_pertinence"
+          placeholder="Note /20"
+          slot="end"
+          class="note-input">
+        </ion-input>
+      </ion-item>
+      <ion-note color="danger" *ngIf="evaluationForm.get('note_pertinence')?.touched && evaluationForm.get('note_pertinence')?.invalid">
+        Note requise (0-20)
+      </ion-note>
+
+      <!-- Présentation -->
+      <ion-item>
+        <ion-label>
+          <strong>Présentation</strong>
+          <p>Qualité de la présentation visuelle</p>
+        </ion-label>
+        <ion-badge slot="end" color="primary">{{ evaluationLoadedData?.coefPresentation }}</ion-badge>
+        <ion-input
+          type="number"
+          min="0"
+          max="20"
+          formControlName="note_presentation"
+          placeholder="Note /20"
+          slot="end"
+          class="note-input">
+        </ion-input>
+      </ion-item>
+      <ion-note color="danger" *ngIf="evaluationForm.get('note_presentation')?.touched && evaluationForm.get('note_presentation')?.invalid">
+        Note requise (0-20)
+      </ion-note>
+
+      <!-- Réponses -->
+      <ion-item>
+        <ion-label>
+          <strong>Réponses</strong>
+          <p>Qualité des réponses aux questions</p>
+        </ion-label>
+        <ion-badge slot="end" color="primary">{{ evaluationLoadedData?.coefReponses }}</ion-badge>
+        <ion-input
+          type="number"
+          min="0"
+          max="20"
+          formControlName="note_reponses"
+          placeholder="Note /20"
+          slot="end"
+          class="note-input">
+        </ion-input>
+      </ion-item>
+      <ion-note color="danger" *ngIf="evaluationForm.get('note_reponses')?.touched && evaluationForm.get('note_reponses')?.invalid">
+        Note requise (0-20)
+      </ion-note>
+
+      <!-- Commentaires -->
+      <ion-item>
+        <ion-label position="stacked">Commentaires</ion-label>
+        <ion-textarea
+          formControlName="commentaire"
+          placeholder="Ajouter vos commentaires qualitatifs ici..."
+          autoGrow="true"
+          rows="4">
+        </ion-textarea>
+      </ion-item>
+      <ion-note color="danger" *ngIf="evaluationForm.get('commentaire')?.touched && evaluationForm.get('commentaire')?.invalid">
+        Le commentaire est obligatoire (au moins 5 caractères).
+      </ion-note>
+    </ion-list>
+
+    <!-- Note finale -->
+    <ion-card>
+      <ion-card-content>
+        <div class="note-finale">
+          <span>Note finale :</span>
+          <ion-badge color="success" class="note-value">{{ noteFinale }}/20</ion-badge>
+        </div>
+        <ion-grid>
+          <ion-row>
+            <ion-col size="6">
+              <ion-button expand="block" fill="outline" color="medium" (click)="annuler()" *ngIf="!modeVoir">
+                Annuler
+              </ion-button>
+              <ion-button expand="block" fill="outline" color="warning" (click)="modifierEvaluation()" *ngIf="modeVoir">
+                Modifier
+              </ion-button>
+            </ion-col>
+            <ion-col size="6">
+              <ion-button expand="block" color="primary" type="submit" *ngIf="!modeVoir">
+                Valider l'évaluation
+              </ion-button>
+              <ion-button expand="block" color="danger" (click)="supprimerEvaluation()" *ngIf="modeVoir && authService.isCoordinateur() && evaluationId" [disabled]="isDeleting">
+                <ion-spinner *ngIf="isDeleting" name="dots"></ion-spinner>
+                <span *ngIf="!isDeleting">Supprimer l'évaluation</span>
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+  </form>
+</ion-content>

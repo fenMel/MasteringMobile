@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent, IonButtons, IonButton, IonIcon, AlertController } from '@ionic/angular/standalone';
+import { IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent, IonButtons, IonButton, IonIcon, IonMenuButton, AlertController } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { logOutOutline } from 'ionicons/icons';
 import {AuthService} from "../../services/auth.service";
@@ -24,7 +24,8 @@ import {AuthService} from "../../services/auth.service";
     IonCardContent,
     IonButtons,
     IonButton,
-    IonIcon
+    IonIcon,
+    IonMenuButton
   ]
 })
 export class DashboardComponent implements OnInit {
@@ -41,16 +42,8 @@ export class DashboardComponent implements OnInit {
 
 
     ngOnInit() {
-      this.authService.geCurrentUserDBInfo().subscribe(
-        userInfo => {
-          this.currentUser = userInfo; // Store the user info
-          console.log('Current User Info:', this.currentUser);
-        },
-        error => {
-          console.error('Error fetching user info:', error);
-        }
-      );
-      console.log()
+      this.currentUser = this.authService.getCurrentUser();
+      console.log('Current User Info:', this.currentUser);
     }
 
 
@@ -66,7 +59,10 @@ export class DashboardComponent implements OnInit {
         {
           text: 'Déconnexion',
           handler: () => {
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('currentUser');
             this.authService.logout();
+            this.currentUser = null;
             this.router.navigate(['/login']);
           }
         }

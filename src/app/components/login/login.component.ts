@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IonContent, IonItem, IonLabel, IonInput, IonButton, IonText, IonSpinner, AlertController, ToastController } from '@ionic/angular/standalone';
-import {AuthService, LoginRequest} from "../../services/auth.service";
+import { AuthService } from "../../services/auth.service";
 
 @Component({
   selector: 'app-login',
@@ -48,7 +48,7 @@ export class LoginComponent implements OnInit{
 
     this.isLoading = true;
 
-    const credentials: LoginRequest = {
+    const credentials = {
       email: this.email,
       password: this.password
     };
@@ -56,15 +56,18 @@ export class LoginComponent implements OnInit{
     this.authService.login(credentials).subscribe({
       next: async (response) => {
         this.isLoading = false;
-        if (response.token) {
+        const token = (response as any).body?.token;
+        if (token) {
+          this.authService.saveTokenInSessionStorage(response); // ou adapte selon ta logique
           this.authService.loadUserFromToken();
-           this.role = this.authService.getUserRole();
-           console.log(this.role);
+          this.role = this.authService.getUserRole();
+          console.log(this.role);
           await this.showToast('Connexion réussie!', 'success');
           await this.router.navigate(['/welcome']);
 
         } else {
-          await this.showAlert('Erreur', response.message || 'Erreur de connexion');
+          const message = (response as any).body?.message || 'Erreur de connexion';
+          await this.showAlert('Erreur', message);
         }
       },
       error: async (error) => {

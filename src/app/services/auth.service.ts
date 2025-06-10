@@ -1,179 +1,272 @@
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import {BehaviorSubject, Observable, throwError} from 'rxjs';
-import {catchError, tap} from 'rxjs/operators';
-import {environment} from "../../environments/environment";
-// @ts-ignore
-import jwt_decode, {jwtDecode} from 'jwt-decode';
-import {Injectable} from "@angular/core";
-import {Router} from "@angular/router";
-import {UserRole} from "../constants/roles.enum"; // Ensure this import is present
-
-export interface LoginRequest {
-  email: string;
-  password: string;
-}
-
-export interface LoginResponse {
-  message?: string;
-  token: string;
-}
-
-export interface JwtPayload {
-  sub: string; // email de l'utilisateur
-  roles: { authority: string }[];
-  iat: number;
-  exp: number;
-}
+import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environment';
+import { HttpClient } from '@angular/common/http';
+import { JwtHelperService } from '@auth0/angular-jwt';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly API_URL = environment.apiUrl;
-  currentUserSubject = new BehaviorSubject<JwtPayload | null>(null);
-  public currentUser$ = this.currentUserSubject.asObservable();
 
-  constructor(private http: HttpClient, private router : Router) {
-    // Check if user is already logged in
-    const storedUser = this.getStoredUser();
-    if (storedUser) {
-      this.currentUserSubject.next(storedUser);
+  private apiUrl = environment.apiUrl;
+  private jwtToken: any;
+  public roles: any;
+  public username: any;
+  private currentUser: any = null;
+
+  constructor(private http: HttpClient, private router: Router) { }
+
+  isBrowser(): boolean {
+    return typeof window !== 'undefined' && typeof sessionStorage !== 'undefined';
+  }
+
+  login(user: any) {
+    return this.http.post(`${this.apiUrl}/login_with_jwt`, user, { observe: 'response' });
+  }
+
+  saveTokenInSessionStorage(token: any) {
+    if (this.isBrowser()) {
+      this.jwtToken = token.body.token;
+      localStorage.setItem('access_token', this.jwtToken);
+
+      const jwtHelper = new JwtHelperService();
+      const decodedToken = jwtHelper.decodeToken(this.jwtToken);
+
+      // Correction ici : on prend le premier champ d'id trouvé
+      this.currentUser = {
+        id: decodedToken.userId || decodedToken.id || decodedToken.uid,
+        username: decodedToken.sub,
+        roles: decodedToken.roles.map((r: any) => r.authority || r)
+      };
+
+      localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
     }
   }
 
-  login(credentials: { email: string; password: string }): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.API_URL}/login_with_jwt`, credentials).pipe(
-      tap(response => {
-        console.log('Login response:', response);
-
-        if (response.token) {
-          localStorage.setItem('authToken', response.token);
-
-          const decoded: JwtPayload = jwtDecode<JwtPayload>(response.token);
-          console.log('Decoded JWT:', decoded);
-
-          this.currentUserSubject.next(decoded);
-          console.log(this.currentUserSubject.value?.sub)
-        }
-      }),
-      catchError(this.handleError)
-
-    );
-  }
-
-
-
-  // Other methods...
-
-  logout(): void {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('currentUser');
-    this.currentUserSubject.next(null);
-  }
-
-  async redirectUserByRole() {
-    const currentRole = this.getUserRole()
-    if (!currentRole) {
-      await this.router.navigate(['/login']);
-      return;
-    }
-    const role : UserRole = currentRole as UserRole
-
-    switch (role) {
-      case UserRole.Coordinator:
-        await this.router.navigate(['/coordinator-dashboard']);
-        break;
-      case UserRole.Candidat:
-        await this.router.navigate(['/candidat-dashboard']);
-        break;
-      case UserRole.Jury:
-        await this.router.navigate(['/jury-dashboard']);
-        break;
-      default:
-        await this.router.navigate(['/login']); // fallback
-        break;
-    }
-  }
-
-  isAuthenticated(): boolean {
-    const token = localStorage.getItem('authToken');
-    return !!token;
-  }
-
-
-  getCurrentUser(): JwtPayload | null {
-    return this.currentUserSubject.value;
-  }
-
-  loadUserFromToken(): void {
-    const token = localStorage.getItem('authToken');
-    if (token) {
-      try {
-        const decoded = jwtDecode<JwtPayload>(token);
-        this.currentUserSubject.next(decoded);
-      } catch (error) {
-        console.error('Failed to decode token:', error);
-        this.currentUserSubject.next(null);
+  loadSessionData(): void {
+    if (this.isBrowser()) {
+      this.jwtToken = localStorage.getItem('access_token');
+      const user = localStorage.getItem('currentUser');
+      if (user) {
+        this.currentUser = JSON.parse(user);
       }
     }
   }
 
-  getToken(): string | null {
-    return localStorage.getItem('authToken');
+  /** Recharge l'utilisateur courant depuis le token (pour compatibilité avec l'ancien code) */
+  loadUserFromToken() {
+    this.loadSessionData();
   }
 
-  private getStoredUser(): any {
-    const userStr = localStorage.getItem('currentUser');
-    return userStr ? JSON.parse(userStr) : null;
+  getCurrentUser() {
+    if (this.currentUser) {
+      return this.currentUser;
+    }
+    if (this.isBrowser()) {
+      const user = localStorage.getItem('currentUser');
+      if (user) {
+        this.currentUser = JSON.parse(user);
+        return this.currentUser;
+      }
+    }
+    return null;
   }
 
-  getUserRole(): string | null {
-    const user = this.currentUserSubject.value;
-    return user?.roles[0]?.authority ?? null;
+  getToken() {
+    return this.jwtToken;
   }
 
-  getUserEmail(): string | null {
-    return this.currentUserSubject.value?.sub ?? null;
+  getTokenFromSessionStorage() {
+    if (this.isBrowser()) {
+      this.jwtToken = localStorage.getItem('access_token');
+    }
   }
 
-
-  geCurrentUserDBInfo (): Observable<any> {
-    const token = localStorage.getItem('authToken');
-    const headers = { 'Authorization': `Bearer ${token}` };
-    return this.http.get<any>(`${this.API_URL}/users/email/${this.getUserEmail()}`, { headers }).pipe(
-      catchError(this.handleError)
-    );
+  getUsernameFromTokenSessionStorage() {
+    if (this.jwtToken == null) {
+      this.getTokenFromSessionStorage();
+    }
+    const jwtHelper = new JwtHelperService();
+    return jwtHelper.decodeToken(this.jwtToken).sub;
   }
 
+  getRolesFromTokenSessionStorage() {
+    if (this.jwtToken == null) {
+      this.getTokenFromSessionStorage();
+    }
+    const jwtHelper = new JwtHelperService();
+    return jwtHelper.decodeToken(this.jwtToken).roles;
+  }
 
-  private handleError(error: HttpErrorResponse) {
-    let errorMessage = 'Une erreur est survenue';
+  decodeMyToken() {
+    if (this.jwtToken == null) {
+      this.getTokenFromSessionStorage();
+    }
+    const jwtHelper = new JwtHelperService();
+    this.roles = jwtHelper.decodeToken(this.jwtToken).roles;
+    this.username = jwtHelper.decodeToken(this.jwtToken).sub;
+  }
 
-    if (error.error instanceof ErrorEvent) {
-      // Client-side error
+  isConnected() {
+    if (this.jwtToken == null) {
+      this.getTokenFromSessionStorage();
+    }
+    if (this.jwtToken == null) {
+      return null;
     } else {
-      // Server-side error
-      console.log('Erreur connexion:', error.message);
+      const jwtHelper = new JwtHelperService();
+      this.roles = jwtHelper.decodeToken(this.jwtToken).roles;
+      this.username = jwtHelper.decodeToken(this.jwtToken).sub;
 
-
-      switch (error.status) {
-        case 401:
-          errorMessage = 'Email ou mot de passe incorrect';
-          break;
-        case 403:
-          errorMessage = 'Vous n\'avez pas les droits d\'accès. Veuillez contacter votre administrateur si vous avez été inscrit';
-          break;
-        case 404:
-          errorMessage = 'Service non disponible';
-          break;
-        case 500:
-          errorMessage = 'Erreur serveur, veuillez réessayer';
-          break;
-        default:
-          errorMessage = `Erreur ${error.status}: ${error.message}`;
+      const user = { username: this.username, roles: this.roles };
+      const isExpired = jwtHelper.isTokenExpired(this.jwtToken);
+      if (!isExpired) {
+        return user;
+      } else {
+        return null;
       }
     }
 
-    return throwError(() => errorMessage);
   }
+
+  // isRole : COORDINATEUR, CANDIDAT, JURY, APPRENANT, SUPERVISOR, SUPPORT_STAFF
+
+  isCoordinateur() {
+    if (this.jwtToken == null) {
+      this.getTokenFromSessionStorage();
+    }
+    const jwtHelper = new JwtHelperService();
+    const roles = jwtHelper.decodeToken(this.jwtToken).roles;
+
+    // Si les rôles sont des objets avec une propriété "authority"
+    if (roles && roles.length > 0 && roles[0].authority) {
+      return roles.some((role: any) => role.authority === 'CORDINATEUR');
+    }
+
+    // Si les rôles sont des chaînes simples
+    return roles && roles.includes('CORDINATEUR');
+  }
+
+  isCandidat() {
+    if (this.jwtToken == null) {
+      this.getTokenFromSessionStorage();
+    }
+    const jwtHelper = new JwtHelperService();
+    const decodedToken = jwtHelper.decodeToken(this.jwtToken);
+   // console.log("Token décodé:", decodedToken);
+
+    const roles = decodedToken.roles;
+   // console.log("Structure des rôles:", JSON.stringify(roles));
+
+    // Vérifier si roles est un tableau d'objets avec authority
+    if (roles && Array.isArray(roles) && roles.length > 0 && roles[0].authority) {
+      const result = roles.some((role: any) => role.authority === 'CANDIDAT');
+     // console.log("Vérification par authority:", result);
+      return result;
+    }
+
+    // Vérifier si roles est un tableau de chaînes
+    if (roles && Array.isArray(roles)) {
+      const result = roles.includes('CANDIDAT');
+     // console.log("Vérification par chaîne:", result);
+      return result;
+    }
+
+    // Vérification plus générique
+   // console.log("Aucune méthode de vérification n'a fonctionné");
+    return false;
+  }
+
+  isJury() {
+    if (this.jwtToken == null) {
+      this.getTokenFromSessionStorage();
+    }
+    const jwtHelper = new JwtHelperService();
+    const roles = jwtHelper.decodeToken(this.jwtToken).roles;
+
+    // Si les rôles sont des objets avec une propriété "authority"
+    if (roles && roles.length > 0 && roles[0].authority) {
+      return roles.some((role: any) => role.authority === 'JURY');
+    }
+
+    // Si les rôles sont des chaînes simples
+    return roles && roles.includes('JURY');
+  }
+
+  isApprenant() {
+    if (this.jwtToken == null) {
+      this.getTokenFromSessionStorage();
+    }
+    const jwtHelper = new JwtHelperService();
+    const roles = jwtHelper.decodeToken(this.jwtToken).roles;
+    return roles.includes('APPRENANT');
+  }
+
+  isSupervisor() {
+    if (this.jwtToken == null) {
+      this.getTokenFromSessionStorage();
+    }
+    const jwtHelper = new JwtHelperService();
+    const roles = jwtHelper.decodeToken(this.jwtToken).roles;
+    return roles.includes('SUPERVISOR');
+  }
+
+  isSupportStaff() {
+    if (this.jwtToken == null) {
+      this.getTokenFromSessionStorage();
+    }
+    const jwtHelper = new JwtHelperService();
+    const roles = jwtHelper.decodeToken(this.jwtToken).roles;
+    return roles.includes('SUPPORT_STAFF');
+  }
+
+  /** Retourne le rôle principal de l'utilisateur courant */
+  getUserRole(): string | null {
+    const user = this.getCurrentUser();
+    if (!user) return null;
+    // Si roles est un tableau d'objets
+    if (user.roles && user.roles.length && typeof user.roles[0] === 'object') {
+      return user.roles[0].authority || null;
+    }
+    // Si roles est un tableau de chaînes
+    if (user.roles && user.roles.length && typeof user.roles[0] === 'string') {
+      return user.roles[0];
+    }
+    return null;
+  }
+
+  /** Vérifie si l'utilisateur est authentifié */
+  isAuthenticated(): boolean {
+    return !!this.getCurrentUser();
+  }
+
+  /** Redirige l'utilisateur selon son rôle */
+  async redirectUserByRole() {
+    const role = this.getUserRole();
+    if (role === 'CANDIDAT') {
+      await this.router.navigate(['/dashboard/candidat']);
+    } else if (role === 'JURY') {
+      await this.router.navigate(['/dashboard/jury']);
+    } else if (role === 'CORDINATEUR') {
+      await this.router.navigate(['/dashboard/coordinator']);
+    } else {
+      await this.router.navigate(['/login']);
+    }
+  }
+
+  logout() {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('currentUser');
+    this.currentUser = null;
+    this.jwtToken = null;
+    this.router.navigateByUrl('/login');
+  }
+
+  // Pour compatibilité avec certains guards
+  public currentUserSubject = {
+    value: this.getCurrentUser()
+  };
+
+
 }

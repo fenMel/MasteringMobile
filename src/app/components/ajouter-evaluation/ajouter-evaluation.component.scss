@@ -1,0 +1,90 @@
+ion-content {
+  --background: #f6f8fa;
+}
+
+ion-card {
+  margin-bottom: 18px;
+  border-radius: 18px;
+  box-shadow: 0 2px 12px rgba(44, 62, 80, 0.07);
+}
+
+ion-card-title, ion-card-subtitle {
+  font-weight: 600;
+}
+
+ion-item {
+  --background: #fff;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  box-shadow: 0 1px 4px rgba(44, 62, 80, 0.04);
+}
+
+ion-label strong {
+  font-size: 1.1em;
+  color: #1a237e;
+}
+
+ion-badge {
+  font-size: 1em;
+  margin-left: 8px;
+  min-width: 32px;
+  justify-content: center;
+}
+
+.note-input {
+  max-width: 80px;
+  text-align: center;
+  font-weight: bold;
+}
+
+ion-textarea, ion-input {
+  background: #f3f6fa;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 1em;
+}
+
+ion-note {
+  margin-left: 16px;
+  margin-bottom: 8px;
+  font-size: 0.95em;
+}
+
+.note-finale {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2em;
+  margin-bottom: 12px;
+
+  .note-value {
+    margin-left: 10px;
+    font-size: 1.3em;
+    font-weight: bold;
+    padding: 6px 16px;
+  }
+}
+
+ion-button {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+ion-spinner {
+  display: block;
+  margin: 40px auto;
+}
+
+@media (max-width: 600px) {
+  ion-card, ion-list {
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .note-finale {
+    flex-direction: column;
+    .note-value {
+      margin-left: 0;
+      margin-top: 6px;
+    }
+  }
+}

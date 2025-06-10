@@ -1,31 +1,54 @@
 <ion-app>
-  <ion-menu contentId="main-content">
-    <ion-header>
-      <ion-toolbar color="primary">
-        <ion-title>Menu</ion-title>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content>
-      <ion-list>
-        <ion-item routerLink="/dashboard/jury/evaluations">Mes évaluations</ion-item>
-        <ion-item (click)="logout()">Déconnexion</ion-item>
-      </ion-list>
-    </ion-content>
-  </ion-menu>
+  <ion-split-pane contentId="main-content">
+    <!-- Side Menu -->
+    <ion-menu contentId="main-content" type="overlay" #menu>
+      <ion-header>
+        <ion-toolbar color="primary">
+          <ion-avatar slot="start" class="menu-avatar">
+            <img src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+          </ion-avatar>
+          <ion-title>Jury</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-list lines="none">
+          <ion-item
+            button
+            (click)="menu.close()"
+            class="menu-item selected"
+            detail="false">
+            <ion-icon name="person-outline" slot="start"></ion-icon>
+            <ion-label>Mes évaluations</ion-label>
+          </ion-item>
+        </ion-list>
+        <div class="menu-footer">
+          <ion-item button (click)="logout()" detail="false">
+            <ion-icon name="log-out-outline" slot="start"></ion-icon>
+            <ion-label>Se déconnecter</ion-label>
+          </ion-item>
+        </div>
+      </ion-content>
+    </ion-menu>
 
-  <div id="main-content">
-    <ion-header>
-      <ion-toolbar color="primary">
-        <ion-buttons slot="start">
-          <ion-menu-button></ion-menu-button>
-        </ion-buttons>
-        <ion-title>Dashboard Jury</ion-title>
-      </ion-toolbar>
-    </ion-header>
+    <!-- Main Content -->
+    <div class="ion-page" id="main-content">
+      <ion-header class="modern-header">
+        <ion-toolbar class="header-toolbar">
+          <ion-buttons slot="start">
+            <ion-menu-button class="menu-toggle"></ion-menu-button>
+          </ion-buttons>
+          <ion-title>Mes évaluations</ion-title>
+          <ion-buttons slot="end">
+            <ion-button fill="clear" class="notification-btn">
+              <ion-icon name="log-out-outline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
 
-    <ion-content class="ion-padding">
-      <h2>Bienvenue Jury</h2>
-      <p>Accédez à vos évaluations ici.</p>
-    </ion-content>
-  </div>
+      <ion-content class="dashboard-content" [fullscreen]="true">
+        <app-evaluation></app-evaluation>
+      </ion-content>
+    </div>
+  </ion-split-pane>
 </ion-app>

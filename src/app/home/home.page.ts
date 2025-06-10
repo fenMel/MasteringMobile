@@ -1,15 +1,11 @@
 import { Component } from '@angular/core';
-<<<<<<< HEAD
 import { IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/angular/standalone';
-import { EvaluationComponent } from '../evaluation/evaluation.component'; // <-- Ajoute cette ligne
-=======
->>>>>>> feature/ajout_composant_de_navigation
+import { EvaluationComponent } from '../components/evaluation/evaluation.component'; // <-- Ajoute cette ligne
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
-<<<<<<< HEAD
   imports: [
     IonHeader,
     IonToolbar,
@@ -20,12 +16,4 @@ import { EvaluationComponent } from '../evaluation/evaluation.component'; // <--
 })
 export class HomePage {
   constructor() {}
-=======
-  standalone: false,
-})
-export class HomePage {
-
-  constructor() {}
-
->>>>>>> feature/ajout_composant_de_navigation
 }

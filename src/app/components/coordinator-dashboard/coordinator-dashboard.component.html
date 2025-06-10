@@ -1,0 +1,483 @@
+<ion-app>
+<ion-split-pane contentId="main-content">
+  <!-- Side Menu -->
+  <ion-menu contentId="main-content" type="overlay" #menu>
+    <ion-header>
+      <ion-toolbar color="primary">
+        <ion-avatar slot="start" class="menu-avatar">
+        </ion-avatar>
+        <ion-title>Coordinator</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <ion-list lines="none">
+        <ion-item
+          button
+          (click)="setActiveView('home'); menu.close()"
+          [class.selected]="activeView === 'home'"
+          detail="false">
+          <ion-icon name="home-outline" slot="start"></ion-icon>
+          <ion-label>Dashboard</ion-label>
+        </ion-item>
+        <ion-item
+          button
+          (click)="setActiveView('profile'); menu.close()"
+          [class.selected]="activeView === 'profile'"
+          detail="false">
+          <ion-icon name="person-outline" slot="start"></ion-icon>
+          <ion-label>Profile</ion-label>
+        </ion-item>
+        <ion-item
+          button
+          (click)="setActiveView('students'); menu.close()"
+          [class.selected]="activeView === 'students'"
+          detail="false">
+          <ion-icon name="people-outline" slot="start"></ion-icon>
+          <ion-label>Liste des candidats</ion-label>
+        </ion-item>
+        <ion-item
+          button
+          (click)="setActiveView('params'); menu.close()"
+          [class.selected]="activeView === 'params'"
+          detail="false">
+          <ion-icon name="settings-outline" slot="start"></ion-icon>
+          <ion-label>Parametres</ion-label>
+        </ion-item>
+      </ion-list>
+
+       <div class="menu-footer">
+        <!--<ion-item button (click)="toggleTheme()" detail="false">
+          <ion-icon
+            [name]="isDarkMode ? 'sunny-outline' : 'moon-outline'"
+            slot="start">
+          </ion-icon>
+          <ion-label>{{isDarkMode ? 'Light Mode' : 'Dark Mode'}}</ion-label>
+        </ion-item> --->
+        <ion-item button (click)="logout()" detail="false">
+          <ion-icon name="log-out-outline" slot="start"></ion-icon>
+          <ion-label>Se deconnecter</ion-label>
+        </ion-item>
+      </div>
+    </ion-content>
+  </ion-menu>
+
+  <!-- Main Content -->
+  <div class="ion-page" id="main-content">
+    <ion-header class="modern-header">
+      <ion-toolbar class="header-toolbar">
+        <ion-buttons slot="start">
+          <ion-menu-button class="menu-toggle"></ion-menu-button>
+        </ion-buttons>
+        <ion-title>{{getActiveViewTitle()}}</ion-title>
+        <ion-buttons slot="end">
+          <ion-button fill="clear" class="notification-btn">
+            <ion-icon name="log-out-outline"></ion-icon>
+
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content [class.dark-content]="isDarkMode">
+      <!-- Dashboard Home -->
+      <div *ngIf="activeView === 'home'">
+        <ion-grid class="dashboard-grid">
+          <ion-row>
+            <ion-col size="12" size-md="6">
+              <ion-card class="welcome-card">
+                <ion-card-header>
+                  <ion-avatar class="profile-avatar">
+                    <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+                  </ion-avatar>
+                  <ion-card-title> {{coordinator.name}}</ion-card-title>
+                  <ion-card-subtitle>{{coordinator.department}}</ion-card-subtitle>
+                </ion-card-header>
+                <ion-card-content>
+                  <ion-list lines="none">
+                    <ion-item>
+                      <ion-icon name="mail-outline" slot="start"></ion-icon>
+                      <ion-label>{{coordinator.email}}</ion-label>
+                    </ion-item>
+                    <ion-item>
+                      <ion-icon name="call-outline" slot="start"></ion-icon>
+                      <ion-label>{{coordinator.phone || 'Not provided'}}</ion-label>
+                    </ion-item>
+                  </ion-list>
+                </ion-card-content>
+              </ion-card>
+            </ion-col>
+            <ion-col size="12" size-md="6">
+              <ion-card class="stats-card">
+                <ion-card-header>
+                  <ion-card-title>Candidats</ion-card-title>
+                </ion-card-header>
+                <ion-card-content>
+                  <div class="stats-container">
+                    <div class="stat-item">
+                      <div class="stat-value">{{getTotalStudentsCount()}}</div>
+                      <div class="stat-label">Totale candidats</div>
+                    </div>
+                    <div class="stat-item">
+                      <div class="stat-value stat-success">{{getActiveStudentsCount()}}</div>
+                      <div class="stat-label">Active</div>
+                    </div>
+                    <div class="stat-item">
+                      <div class="stat-value stat-warning">{{getTotalStudentsCount() - getActiveStudentsCount()}}</div>
+                      <div class="stat-label">Inactive</div>
+                    </div>
+                  </div>
+                  <ion-progress-bar
+                    [value]="getActiveStudentsCount() / getTotalStudentsCount()"
+                    color="success">
+                  </ion-progress-bar>
+                </ion-card-content>
+              </ion-card>
+            </ion-col>
+            <ion-col size="12" size-md="6">
+              <ion-card class="stats-card">
+                <ion-card-header>
+                  <ion-card-title>Sessions de soutenance</ion-card-title>
+                </ion-card-header>
+                <ion-card-content>
+                  <div class="stats-container">
+                    <div class="stat-item">
+                      <div class="stat-value">{{getTotalStudentsCount()}}</div>
+                      <div class="stat-label">Total</div>
+                    </div>
+                    <div class="stat-item">
+                      <div class="stat-value stat-success">{{getActiveStudentsCount()}}</div>
+                      <div class="stat-label">En cours </div>
+                    </div>
+                    <div class="stat-item">
+                      <div class="stat-value stat-warning">{{getTotalStudentsCount() - getActiveStudentsCount()}}</div>
+                      <div class="stat-label">A venir  </div>
+                    </div>
+                  </div>
+                  <ion-progress-bar
+                    [value]="getActiveStudentsCount() / getTotalStudentsCount()"
+                    color="success">
+                  </ion-progress-bar>
+                </ion-card-content>
+              </ion-card>
+            </ion-col>
+          </ion-row>
+          <ion-datetime
+            class="calendar"
+            presentation="date"
+            [value]="formattedDate"
+            [highlightedDates]="highlightedDates">
+            <span slot="title">Date des prochaines session de soutenance</span>
+          </ion-datetime>
+        </ion-grid>
+      </div>
+
+      <!-- Profile Section -->
+      <div *ngIf="activeView === 'profile'">
+        <ion-card class="profile-card">
+          <ion-card-header>
+
+          </ion-card-header>
+          <ion-card-content>
+            <div class="avatar-upload">
+              <ion-avatar (click)="changeAvatar()">
+                <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+              </ion-avatar>
+              <ion-button fill="clear" (click)="changeAvatar()">
+                <ion-icon name="camera-outline" slot="start"></ion-icon>
+                <!-- Change -->
+              </ion-button>
+            </div>
+
+            <ion-list>
+              <ion-item>
+                <ion-label position="stacked">Nom</ion-label>
+                <ion-input [(ngModel)]="coordinator.name" placeholder="Enter name"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label position="stacked">Email</ion-label>
+                <ion-input [(ngModel)]="coordinator.email" type="email" placeholder="Enter email"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label position="stacked">Spécialité</ion-label>
+                <ion-input [(ngModel)]="coordinator.department" placeholder="Enter department"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label position="stacked">Téléphone</ion-label>
+                <ion-input [(ngModel)]="coordinator.phone" type="tel" placeholder="Enter phone"></ion-input>
+              </ion-item>
+            </ion-list>
+
+            <ion-button expand="block" (click)="saveProfile()" color="primary" class="save-button">
+              <ion-icon name="save-outline" slot="start"></ion-icon>
+              Enregistrez les changements
+            </ion-button>
+          </ion-card-content>
+        </ion-card>
+      </div>
+
+      <!-- Students Section -->
+      <div *ngIf="activeView === 'students'">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Student Management</ion-card-title>
+            <ion-card-subtitle>Manage your department students</ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+            <div class="action-bar">
+              <ion-searchbar
+                [(ngModel)]="searchQuery"
+                placeholder="Search students..."
+                (ionInput)="filterStudents()"
+                animated>
+              </ion-searchbar>
+              <ion-button (click)="presentAddStudentModal()" color="primary">
+                <ion-icon name="add-outline" slot="start"></ion-icon>
+                Add Student
+              </ion-button>
+            </div>
+
+            <!-- Students List -->
+            <ion-list lines="full" class="student-list">
+              <ion-item-sliding *ngFor="let student of filteredStudents">
+                <ion-item (click)="presentStudentDetailsModal(student)">
+                  <ion-avatar slot="start">
+                  </ion-avatar>
+                  <ion-label>
+                    <h2>{{student.name}}</h2>
+                    <p>{{student.email}}</p>
+                    <p>{{student.course}} - Year {{student.year}}</p>
+                  </ion-label>
+                  <ion-badge
+                    slot="end"
+                    [color]="student.status === 'active' ? 'success' : 'warning'">
+                    {{student.status | titlecase}}
+                  </ion-badge>
+                </ion-item>
+
+                <ion-item-options side="end">
+                  <ion-item-option color="primary" (click)="presentEditStudentModal(student)">
+                    <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+                  </ion-item-option>
+                  <ion-item-option color="danger" (click)="confirmDelete(student.id)">
+                    <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+                  </ion-item-option>
+                </ion-item-options>
+              </ion-item-sliding>
+            </ion-list>
+
+            <div *ngIf="filteredStudents.length === 0" class="empty-state">
+              <ion-icon name="people-outline"></ion-icon>
+              <p>Aucun candidat trouvé</p>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
+
+      <!-- Parameters Section -->
+      <div *ngIf="activeView === 'params'">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title> Paramètres système</ion-card-title>
+            <ion-card-subtitle>Congigurez les paramètres du système</ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-list lines="full">
+              <ion-item>
+                <ion-icon name="calendar-outline" slot="start"></ion-icon>
+                <ion-label>
+                  <h3>Academic Year</h3>
+                  <p>Année academique actuelle</p>
+                </ion-label>
+                <ion-select value="2024-2025" interface="action-sheet">
+                  <ion-select-option value="2023-2024">2023-2024</ion-select-option>
+                  <ion-select-option value="2024-2025">2024-2025</ion-select-option>
+                  <ion-select-option value="2025-2026">2025-2026</ion-select-option>
+                </ion-select>
+              </ion-item>
+              <ion-item>
+                <ion-icon name="person-circle-outline" slot="start"></ion-icon>
+                <ion-label>
+                  <h3>Default Student Status</h3>
+                  <p>Default status for new students</p>
+                </ion-label>
+                <ion-select value="active" interface="action-sheet">
+                  <ion-select-option value="active">Active</ion-select-option>
+                  <ion-select-option value="inactive">Inactive</ion-select-option>
+                </ion-select>
+              </ion-item>
+              <ion-item>
+                <ion-icon name="notifications-outline" slot="start"></ion-icon>
+                <ion-checkbox checked slot="start"></ion-checkbox>
+                <ion-label>
+                  <h3>Email Notifications</h3>
+                  <p>Send email notifications for student updates</p>
+                </ion-label>
+              </ion-item>
+              <ion-item>
+                <ion-icon name="cloud-upload-outline" slot="start"></ion-icon>
+                <ion-checkbox slot="start"></ion-checkbox>
+                <ion-label>
+                  <h3>Auto-backup</h3>
+                  <p>Automatically backup student data daily</p>
+                </ion-label>
+              </ion-item>
+            </ion-list>
+            <ion-button expand="block" color="primary" class="save-button">
+              <ion-icon name="save-outline" slot="start"></ion-icon>
+              Save Parameters
+            </ion-button>
+          </ion-card-content>
+        </ion-card>
+      </div>
+    </ion-content>
+  </div>
+</ion-split-pane>
+
+<!-- Student Details Modal -->
+<ion-modal [isOpen]="isStudentDetailsModalOpen" (didDismiss)="closeStudentDetailsModal()">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar color="primary">
+        <ion-title>Infos Candidat</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="closeStudentDetailsModal()">
+            <ion-icon name="close-sharp"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content *ngIf="selectedStudent">
+      <div class="modal-content">
+        <ion-avatar class="student-avatar">
+          <ion-avatar (click)="changeAvatar()">
+            <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+          </ion-avatar>
+        </ion-avatar>
+
+        <ion-list lines="none">
+          <ion-item>
+            <ion-label>
+              <h2>Name</h2>
+              <p>{{selectedStudent.name}}</p>
+            </ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-label>
+              <h2>Email</h2>
+              <p>{{selectedStudent.email}}</p>
+            </ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-label>
+              <h2>Course</h2>
+              <p>{{selectedStudent.course}}</p>
+            </ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-label>
+              <h2>Year</h2>
+              <p>Year {{selectedStudent.year}}</p>
+            </ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-label>
+              <h2>Status</h2>
+              <p>
+                <ion-badge [color]="selectedStudent.status === 'active' ? 'success' : 'warning'">
+                  {{selectedStudent.status | titlecase}}
+                </ion-badge>
+              </p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>
+
+<!-- Add/Edit Student Modal -->
+<ion-modal [isOpen]="isStudentFormModalOpen" (didDismiss)="closeStudentFormModal()">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar color="primary">
+        <ion-title>{{isEditingStudent ? 'Edit Student' : 'Add Student'}}</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="closeStudentFormModal()">
+            <ion-icon name="close-outline"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <form (ngSubmit)="saveStudent()" class="student-form">
+        <ion-list>
+          <ion-item>
+            <ion-avatar slot="start" (click)="changeStudentAvatar()" class="clickable-avatar">
+              <img [src]="formStudent.avatar || 'assets/images/student-avatar.png'" />
+              <div class="avatar-overlay">
+                <ion-icon name="camera-outline"></ion-icon>
+              </div>
+            </ion-avatar>
+            <ion-label position="stacked">Name</ion-label>
+            <ion-input [(ngModel)]="formStudent.name" name="name" required></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">Email</ion-label>
+            <ion-input [(ngModel)]="formStudent.email" name="email" type="email" required></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">Course</ion-label>
+            <ion-input [(ngModel)]="formStudent.course" name="course" required></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">Year</ion-label>
+            <ion-select [(ngModel)]="formStudent.year" name="year" interface="action-sheet">
+              <ion-select-option value="1">1st Year</ion-select-option>
+              <ion-select-option value="2">2nd Year</ion-select-option>
+              <ion-select-option value="3">3rd Year</ion-select-option>
+              <ion-select-option value="4">4th Year</ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>Status</ion-label>
+            <ion-select [(ngModel)]="formStudent.status" name="status" interface="action-sheet">
+              <ion-select-option value="active">Active</ion-select-option>
+              <ion-select-option value="inactive">Inactive</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-list>
+
+        <div class="form-actions">
+          <ion-button type="submit" expand="block" color="primary">
+            <ion-icon name="save-outline" slot="start"></ion-icon>
+            {{isEditingStudent ? 'Update' : 'Save'}}
+          </ion-button>
+        </div>
+      </form>
+    </ion-content>
+  </ng-template>
+</ion-modal>
+
+<!-- Delete Confirmation Alert -->
+<ion-alert
+  [isOpen]="showDeleteAlert"
+  header="Confirm Delete"
+  [message]="'Are you sure you want to delete this student?'"
+  [buttons]="alertButtons"
+  (didDismiss)="showDeleteAlert = false">
+</ion-alert>
+
+<!-- Toast Notification -->
+<ion-toast
+  [isOpen]="showToast"
+  [message]="toastMessage"
+  [duration]="3000"
+  [position]="'top'"
+  [color]="toastColor"
+  (didDismiss)="showToast = false">
+</ion-toast>
+</ion-app>

@@ -1,0 +1,224 @@
+<ion-app>
+  <!-- Side Menu -->
+  <ion-menu contentId="main-content" type="overlay" class="modern-menu">
+    <ion-header class="menu-header">
+      <ion-toolbar color="transparent">
+        <div class="menu-profile">
+          <div class="profile-avatar">
+            <ion-icon name="person"></ion-icon>
+          </div>
+          <div class="profile-info">
+            <h3>{{ studentName }}</h3>
+            <p>Candidat</p>
+          </div>
+        </div>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="menu-content" [fullscreen]="true">
+      <div class="menu-section">
+        <h4>Navigation</h4>
+        <ion-list class="menu-list">
+          <ion-item
+            button
+            class="menu-item"
+            routerLink="/dashboard/candidat/mes-candidatures"
+            routerLinkActive="active">
+            <ion-icon name="folder" slot="start"></ion-icon>
+            <ion-label>Mes candidatures</ion-label>
+          </ion-item>
+
+          <ion-item
+            button
+            class="menu-item"
+            routerLink="/dashboard/candidat/profil">
+            <ion-icon name="person" slot="start"></ion-icon>
+            <ion-label>Mon profil</ion-label>
+          </ion-item>
+
+          <ion-item
+            button
+            class="menu-item"
+            routerLink="/dashboard/candidat/entretiens">
+            <ion-icon name="calendar" slot="start"></ion-icon>
+            <ion-label>Entretiens</ion-label>
+          </ion-item>
+
+          <ion-item
+            button
+            class="menu-item"
+            routerLink="/dashboard/candidat/notifications">
+            <ion-icon name="notifications" slot="start"></ion-icon>
+            <ion-label>Notifications</ion-label>
+          </ion-item>
+        </ion-list>
+      </div>
+
+      <div class="menu-section">
+        <h4>Paramètres</h4>
+        <ion-list class="menu-list">
+          <ion-item
+            button
+            class="menu-item"
+            routerLink="/dashboard/candidat/parametres">
+            <ion-icon name="settings" slot="start"></ion-icon>
+            <ion-label>Paramètres</ion-label>
+          </ion-item>
+
+          <ion-item
+            button
+            class="menu-item logout-item"
+            (click)="logout()">
+            <ion-icon name="log-out" slot="start"></ion-icon>
+            <ion-label>Déconnexion</ion-label>
+          </ion-item>
+        </ion-list>
+      </div>
+    </ion-content>
+  </ion-menu>
+
+  <!-- Main Content -->
+  <div id="main-content">
+    <!-- Header -->
+      <ion-header class="modern-header">
+      <ion-toolbar class="header-toolbar">
+        <ion-buttons slot="start">
+          <ion-menu-button class="menu-toggle"></ion-menu-button>
+        </ion-buttons>
+
+        <div class="header-title">
+          <h1>Dashboard</h1>
+          <p>Bonjour {{ studentName }} 👋</p>
+        </div>
+
+        <ion-buttons slot="end">
+          <ion-button fill="clear" class="notification-btn">
+            <ion-icon name="notifications" slot="icon-only"></ion-icon>
+            <ion-badge class="notification-badge">3</ion-badge>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="dashboard-content" [fullscreen]="true">
+      <!-- Welcome Section -->
+      <div class="welcome-section">
+        <div class="welcome-card">
+          <div class="welcome-content">
+            <h2>Bienvenue sur votre dashboard</h2>
+            <p>Gérez vos candidatures et suivez votre progression académique</p>
+          </div>
+          <div class="welcome-illustration">
+            <ion-icon name="person"></ion-icon>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats Cards -->
+      <div class="stats-section">
+        <div class="stats-grid">
+          <div class="stat-card primary">
+            <div class="stat-icon">
+              <ion-icon name="document-text"></ion-icon>
+            </div>
+            <div class="stat-content">
+              <h3>{{ stats.applications }}</h3>
+              <p>Candidatures</p>
+            </div>
+          </div>
+
+          <div class="stat-card warning">
+            <div class="stat-icon">
+              <ion-icon name="time"></ion-icon>
+            </div>
+            <div class="stat-content">
+              <h3>{{ stats.pending }}</h3>
+              <p>En attente</p>
+            </div>
+          </div>
+
+          <div class="stat-card success">
+            <div class="stat-icon">
+              <ion-icon name="checkmark-circle"></ion-icon>
+            </div>
+            <div class="stat-content">
+              <h3>{{ stats.accepted }}</h3>
+              <p>Acceptées</p>
+            </div>
+          </div>
+
+          <div class="stat-card tertiary">
+            <div class="stat-icon">
+              <ion-icon name="calendar"></ion-icon>
+            </div>
+            <div class="stat-content">
+              <h3>{{ stats.interviews }}</h3>
+              <p>Entretiens</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="section">
+        <div class="section-header">
+          <h3>Actions rapides</h3>
+        </div>
+
+        <div class="quick-actions-grid">
+          <div
+            *ngFor="let action of quickActions"
+            class="action-card"
+            [class]="action.color"
+            (click)="navigateTo(action.route)">
+            <div class="action-icon">
+              <ion-icon [name]="action.icon"></ion-icon>
+            </div>
+            <div class="action-content">
+              <h4>{{ action.title }}</h4>
+              <p>{{ action.subtitle }}</p>
+            </div>
+            <ion-icon name="chevron-forward" class="action-arrow"></ion-icon>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Applications -->
+      <div class="section">
+        <div class="section-header">
+          <h3>Candidatures récentes</h3>
+          <ion-button
+            fill="clear"
+            size="small"
+            routerLink="/dashboard/candidat/mes-candidatures">
+            Voir tout
+            <ion-icon name="arrow-forward" slot="end"></ion-icon>
+          </ion-button>
+        </div>
+
+        <div class="applications-list">
+          <div
+            *ngFor="let app of recentApplications"
+            class="application-card">
+            <div class="app-logo">
+              <ion-icon [name]="app.logo"></ion-icon>
+            </div>
+            <div class="app-content">
+              <h4>{{ app.position }}</h4>
+              <p>{{ app.company }}</p>
+              <small>{{ app.date | date:'dd/MM/yyyy' }}</small>
+            </div>
+            <ion-chip
+              [color]="getStatusColor(app.status)"
+              class="status-chip">
+              {{ getStatusText(app.status) }}
+            </ion-chip>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Spacing -->
+      <div class="bottom-spacing"></div>
+    </ion-content>
+  </div>
+</ion-app>

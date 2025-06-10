@@ -1,0 +1,187 @@
+<ion-app>
+  <ion-menu contentId="main-content" type="overlay">
+    <ion-header>
+      <ion-toolbar color="secondary">
+        <ion-title class="ion-text-center font-bold">MASTERING</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <div class="menu-content">
+        <p class="menu-subtitle">Dashboard pour le coordinateur</p>
+        <ion-list>
+          <ion-item button (click)="navigateTo('/dashboard')">
+            <ion-icon name="home-outline" slot="start"></ion-icon>
+            <ion-label>Accueil</ion-label>
+          </ion-item>
+          <ion-item button (click)="navigateTo('/soutenances')">
+            <ion-icon name="calendar-outline" slot="start"></ion-icon>
+            <ion-label>Soutenances</ion-label>
+          </ion-item>
+          <ion-item button (click)="navigateTo('/students')">
+            <ion-icon name="people-outline" slot="start"></ion-icon>
+            <ion-label>Étudiants</ion-label>
+          </ion-item>
+          <ion-item button (click)="navigateTo('/parameters')" class="active-menu-item">
+            <ion-icon name="settings-outline" slot="start"></ion-icon>
+            <ion-label>Paramètres</ion-label>
+          </ion-item>
+          <ion-item button (click)="navigateTo('/profile')">
+            <ion-icon name="person-outline" slot="start"></ion-icon>
+            <ion-label>Mon Profil</ion-label>
+          </ion-item>
+          <ion-item button (click)="logout()" class="logout-item">
+            <ion-icon name="log-out-outline" slot="start" color="danger"></ion-icon>
+            <ion-label color="danger">Déconnexion</ion-label>
+          </ion-item>
+        </ion-list>
+      </div>
+    </ion-content>
+  </ion-menu>
+
+  <div class="ion-page" id="main-content">
+    <ion-header>
+      <ion-toolbar class="custom-header-toolbar">
+        <ion-buttons slot="start">
+          <ion-menu-button color="light"></ion-menu-button>
+        </ion-buttons>
+        <ion-title class="ion-text-center">Paramètres</ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="parameters-content">
+      <!-- User Info Card -->
+      <div class="user-info-card">
+        <div class="user-avatar">
+          <ion-icon name="person-circle-outline"></ion-icon>
+        </div>
+        <div class="user-details">
+          <h2>{{ currentUser?.name || 'Admin User' }}</h2>
+          <p>{{ currentUser?.role || 'Coordinateur' }}</p>
+          <ion-badge color="success">En ligne</ion-badge>
+        </div>
+      </div>
+
+      <!-- Settings Sections -->
+      <div class="settings-sections">
+        <!-- General Settings -->
+        <div class="setting-section">
+          <h3 class="section-title">
+            <ion-icon name="settings-outline"></ion-icon>
+            Général
+          </h3>
+          <ion-list class="settings-list">
+            <ion-item>
+              <ion-icon name="notifications-outline" slot="start"></ion-icon>
+              <ion-label>
+                <h3>Notifications</h3>
+                <p>Recevoir les notifications push</p>
+              </ion-label>
+              <ion-toggle slot="end" ></ion-toggle>
+            </ion-item>
+
+            <ion-item>
+              <ion-icon name="language-outline" slot="start"></ion-icon>
+              <ion-label>
+                <h3>Langue</h3>
+                <p>Choisir la langue de l'interface</p>
+              </ion-label>
+              <ion-select
+                value="fr"
+                slot="end"
+                interface="popover"
+                >
+                <ion-select-option value="fr">Français</ion-select-option>
+                <ion-select-option value="en">English</ion-select-option>
+                <ion-select-option value="es">Español</ion-select-option>
+              </ion-select>
+            </ion-item>
+
+            <ion-item>
+              <ion-icon name="moon-outline" slot="start"></ion-icon>
+              <ion-label>
+                <h3>Mode sombre</h3>
+                <p>Activer le thème sombre</p>
+              </ion-label>
+              <ion-toggle slot="end" ></ion-toggle>
+            </ion-item>
+          </ion-list>
+        </div>
+
+        <!-- Account Settings -->
+        <div class="setting-section">
+          <h3 class="section-title">
+            <ion-icon name="person-outline"></ion-icon>
+            Compte
+          </h3>
+          <ion-list class="settings-list">
+            <ion-item button >
+              <ion-icon name="key-outline" slot="start"></ion-icon>
+              <ion-label>
+                <h3>Changer le mot de passe</h3>
+                <p>Modifier votre mot de passe</p>
+              </ion-label>
+              <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+            </ion-item>
+
+            <ion-item button >
+              <ion-icon name="create-outline" slot="start"></ion-icon>
+              <ion-label>
+                <h3>Modifier le profil</h3>
+                <p>Mettre à jour vos informations</p>
+              </ion-label>
+              <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+            </ion-item>
+          </ion-list>
+        </div>
+
+        <!-- Security -->
+        <div class="setting-section">
+          <h3 class="section-title">
+            <ion-icon name="shield-outline"></ion-icon>
+            Sécurité
+          </h3>
+          <ion-list class="settings-list">
+            <ion-item>
+              <ion-icon name="finger-print-outline" slot="start"></ion-icon>
+              <ion-label>
+                <h3>Authentification biométrique</h3>
+                <p>Utiliser l'empreinte digitale</p>
+              </ion-label>
+              <ion-toggle slot="end" ></ion-toggle>
+            </ion-item>
+
+            <ion-item>
+              <ion-icon name="time-outline" slot="start"></ion-icon>
+              <ion-label>
+                <h3>Déconnexion automatique</h3>
+                <p>Se déconnecter après inactivité</p>
+              </ion-label>
+              <ion-select
+                value="30"
+                slot="end"
+                interface="popover"
+                >
+                <ion-select-option value="15">15 minutes</ion-select-option>
+                <ion-select-option value="30">30 minutes</ion-select-option>
+                <ion-select-option value="60">1 heure</ion-select-option>
+                <ion-select-option value="0">Jamais</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-list>
+        </div>
+      </div>
+
+      <!-- Save Button -->
+      <div class="save-section">
+        <ion-button
+          expand="block"
+          color="primary"
+
+          class="save-button">
+          <ion-icon name="save-outline" slot="start"></ion-icon>
+          Enregistrer les modifications
+        </ion-button>
+      </div>
+    </ion-content>
+  </div>
+</ion-app>

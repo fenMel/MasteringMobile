@@ -1,3 +1,17 @@
-<p>
-  confirmation-dialog works!
-</p>
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ data.title || 'Confirmation' }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <p>{{ data.message }}</p>
+  <ion-footer class="ion-no-border" style="margin-top: 2rem;">
+    <ion-button expand="block" color="medium" (click)="onCancel()">
+      Annuler
+    </ion-button>
+    <ion-button expand="block" color="primary" (click)="onConfirm()">
+      {{ data.confirmButtonText || 'Oui' }}
+    </ion-button>
+  </ion-footer>
+</ion-content>

@@ -18,7 +18,7 @@
           <span *ngIf="candidat.salle">| <strong>Salle :</strong> {{ candidat.salle }}</span>
         </ion-label>
       </ion-item>
-      <ion-button expand="block" fill="outline" color="medium" (click)="retourListe()">
+      <ion-button expand="block" fill="outline" color="primary" (click)="retourListe()">
         Retour à la liste
       </ion-button>
     </ion-card-content>
@@ -52,8 +52,7 @@
           placeholder="Note /20"
           slot="end"
           class="note-input"
-          [readonly]="modeVoir">
-        </ion-input>
+          [readonly]="modeVoir"></ion-input>
       </ion-item>
       <ion-note color="danger" *ngIf="evaluationForm.get('note_clarte')?.touched && evaluationForm.get('note_clarte')?.invalid">
         Note requise (0-20)
@@ -74,8 +73,7 @@
           placeholder="Note /20"
           slot="end"
           class="note-input"
-          [readonly]="modeVoir">
-        </ion-input>
+          [readonly]="modeVoir"></ion-input>
       </ion-item>
       <ion-note color="danger" *ngIf="evaluationForm.get('note_contenu')?.touched && evaluationForm.get('note_contenu')?.invalid">
         Note requise (0-20)
@@ -96,8 +94,7 @@
           placeholder="Note /20"
           slot="end"
           class="note-input"
-          [readonly]="modeVoir">
-        </ion-input>
+          [readonly]="modeVoir"></ion-input>
       </ion-item>
       <ion-note color="danger" *ngIf="evaluationForm.get('note_pertinence')?.touched && evaluationForm.get('note_pertinence')?.invalid">
         Note requise (0-20)
@@ -118,8 +115,7 @@
           placeholder="Note /20"
           slot="end"
           class="note-input"
-          [readonly]="modeVoir">
-        </ion-input>
+          [readonly]="modeVoir"></ion-input>
       </ion-item>
       <ion-note color="danger" *ngIf="evaluationForm.get('note_presentation')?.touched && evaluationForm.get('note_presentation')?.invalid">
         Note requise (0-20)
@@ -140,8 +136,7 @@
           placeholder="Note /20"
           slot="end"
           class="note-input"
-          [readonly]="modeVoir">
-        </ion-input>
+          [readonly]="modeVoir"></ion-input>
       </ion-item>
       <ion-note color="danger" *ngIf="evaluationForm.get('note_reponses')?.touched && evaluationForm.get('note_reponses')?.invalid">
         Note requise (0-20)

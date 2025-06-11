@@ -1,24 +1,32 @@
-<ion-segment [(ngModel)]="ongletActif" class="custom-segment">
-  <ion-segment-button value="aEvaluer">
+<ion-segment [(ngModel)]="filtres.statut" (ionChange)="appliquerFiltres()">
+  <ion-segment-button value="Non Évalué">
     À évaluer
   </ion-segment-button>
-  <ion-segment-button value="evalues">
+  <ion-segment-button value="Évalué">
     Évalués
   </ion-segment-button>
+  <ion-segment-button value="Tout les statuts">
+    Tous
+  </ion-segment-button>
 </ion-segment>
-
-<ion-item lines="none" class="search-bar">
+<ion-item>
   <ion-input
     [(ngModel)]="filtres.candidat"
-    placeholder="Rechercher un candidat…"
-    (keyup.enter)="appliquerFiltres()">
+    (ionInput)="appliquerFiltres()"
+    placeholder="Nom ou prénom">
   </ion-input>
-  <ion-button fill="clear" *ngIf="filtres.candidat" slot="end" (click)="nettoyerRecherche()">
+  <ion-button fill="clear" slot="end" *ngIf="filtres.candidat" (click)="nettoyerRecherche()">
     <ion-icon name="close"></ion-icon>
   </ion-button>
 </ion-item>
 
-<ion-list>
+<ng-container *ngIf="candidatSelectionne">
+  <div class="candidat-selectionne">
+    <strong>{{ candidatSelectionne.nom }} {{ candidatSelectionne.prenom }}</strong>
+  </div>
+</ng-container>
+
+<ion-list *ngIf="evaluationsAffichees.length > 0; else aucunResultat">
   <ion-card *ngFor="let evaluation of evaluationsAffichees">
     <ion-card-content class="eval-card-content">
       <div class="eval-header">
@@ -47,6 +55,11 @@
     </ion-card-content>
   </ion-card>
 </ion-list>
+<ng-template #aucunResultat>
+  <ion-item>
+    <ion-label>Aucun résultat trouvé.</ion-label>
+  </ion-item>
+</ng-template>
 
 <div class="pagination">
   <span>

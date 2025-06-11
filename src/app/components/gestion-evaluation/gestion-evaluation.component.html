@@ -1,3 +1,153 @@
-<p>
-  gestion-evaluation works!
-</p>
+<!-- Exemple à placer dans ton composant Ionic (ex: evaluation.component.html) -->
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Mes Soutenances</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <!-- Filtres -->
+  <ion-card>
+    <ion-card-content>
+      <ion-grid>
+        <ion-row>
+          <ion-col size="12" size-md="4">
+            <!-- Date input + bouton calendrier -->
+<ion-item>
+  <ion-label position="floating"></ion-label>
+  <ion-input
+    type="date"
+    [(ngModel)]="filtres.date"
+    (ionInput)="appliquerFiltres()"
+    [value]="filtres.date ? (filtres.date | date:'yyyy-MM-dd') : ''">
+  </ion-input>
+  <ion-button fill="clear" slot="end" (click)="showDatePicker = true">
+    <ion-icon name="calendar-outline"></ion-icon>
+  </ion-button>
+</ion-item>
+
+<!-- Modal calendrier -->
+<ion-modal [isOpen]="showDatePicker" (didDismiss)="showDatePicker = false">
+  <ng-template>
+    <ion-content>
+      <ion-datetime
+        presentation="date"
+        [(ngModel)]="filtres.date"
+        (ionChange)="appliquerFiltres(); showDatePicker = false">
+      </ion-datetime>
+      <ion-button expand="block" (click)="showDatePicker = false">Fermer</ion-button>
+    </ion-content>
+  </ng-template>
+</ion-modal>
+          </ion-col>
+          <ion-col size="12" size-md="4">
+            <ion-item>
+              <ion-label position="floating">Heure</ion-label>
+              <ion-input
+                type="time"
+                [(ngModel)]="filtres.heure"
+                (ionInput)="appliquerFiltres()">
+              </ion-input>
+            </ion-item>
+          </ion-col>
+          <ion-col size="12" size-md="4">
+            <ion-item>
+              <ion-label position="floating">Statut</ion-label>
+              <ion-select [(ngModel)]="filtres.statut" (ionChange)="appliquerFiltres()">
+                <ion-select-option *ngFor="let option of optionsStatut" [value]="option">{{ option }}</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="12">
+            <ion-item>
+              <ion-label position="floating">Rechercher un candidat ou jury...</ion-label>
+              <ion-input
+                [(ngModel)]="filtres.recherche"
+                (ionInput)="appliquerFiltres()">
+              </ion-input>
+              <ion-button fill="clear" slot="end" *ngIf="filtres.recherche" (click)="filtres.recherche=''; appliquerFiltres()">
+                <ion-icon name="close"></ion-icon>
+              </ion-button>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Liste des évaluations -->
+  <ion-list *ngIf="evaluationsAffichees.length > 0; else aucunResultat">
+    <ion-card *ngFor="let evaluation of evaluationsAffichees">
+      <ion-card-content>
+        <div class="eval-header">
+          <div>
+            <strong>Candidat :</strong> {{ evaluation.candidat.nom }} {{ evaluation.candidat.prenom }}
+          </div>
+          <ion-badge [color]="evaluation.statut === 'Évalué' ? 'success' : 'danger'">
+            {{ evaluation.statut }}
+          </ion-badge>
+        </div>
+        <div>
+          <strong>Jury :</strong> {{ evaluation.jury.nom }} {{ evaluation.jury.prenom }}
+        </div>
+        <div>
+          <strong>Sujet :</strong> <span [title]="evaluation.sujet">{{ evaluation.sujet || 'Sujet non défini' }}</span>
+        </div>
+        <div>
+          <strong>Date & Heure :</strong>
+          <span *ngIf="evaluation.dateHeure; else noDate">
+            {{ evaluation.dateHeure | date:'dd/MM/yyyy - HH:mm' }}
+          </span>
+          <ng-template #noDate>
+            <span class="no-data">Date non définie</span>
+          </ng-template>
+        </div>
+        <div class="eval-actions">
+          <ion-button
+            expand="block"
+            color="primary"
+            *ngIf="evaluation.statut !== 'Évalué'"
+            (click)="evaluer(evaluation)">
+            Évaluer
+          </ion-button>
+          <ion-button
+            expand="block"
+            color="success"
+            *ngIf="evaluation.statut === 'Évalué'"
+            (click)="voirEvaluation(evaluation)">
+            Voir
+          </ion-button>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </ion-list>
+  <ng-template #aucunResultat>
+    <ion-item>
+      <ion-label>Aucune évaluation trouvée.</ion-label>
+    </ion-item>
+  </ng-template>
+
+  <!-- Pagination -->
+  <div class="pagination">
+    <span>
+      Affichage de
+      {{ (pageActuelle - 1) * evaluationsParPage + 1 }}-{{ Math.min(pageActuelle * evaluationsParPage, totalEvaluations) }}
+      sur {{ totalEvaluations }} évaluations
+    </span>
+    <div class="pagination-controls">
+      <ion-button size="small" fill="clear" [disabled]="pageActuelle === 1" (click)="changerPage(1)">«</ion-button>
+      <ion-button
+        size="small"
+        fill="solid"
+        *ngFor="let page of pages"
+        [color]="page === pageActuelle ? 'primary' : 'light'"
+        (click)="changerPage(page)">
+        {{ page }}
+      </ion-button>
+      <ion-button size="small" fill="clear" [disabled]="pageActuelle === pages.length" (click)="changerPage(pages.length)">»</ion-button>
+    </div>
+  </div>
+</ion-content>

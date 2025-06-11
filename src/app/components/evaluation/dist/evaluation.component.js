@@ -17,11 +17,12 @@ exports.EvaluationComponent = void 0;
 var core_1 = require("@angular/core");
 var common_1 = require("@angular/common");
 var forms_1 = require("@angular/forms");
-var standalone_1 = require("@ionic/angular/standalone");
+var angular_1 = require("@ionic/angular");
 var EvaluationComponent = /** @class */ (function () {
-    function EvaluationComponent(evaluationService, router) {
+    function EvaluationComponent(evaluationService, router, evaluationState) {
         this.evaluationService = evaluationService;
         this.router = router;
+        this.evaluationState = evaluationState;
         this.ongletActif = 'aEvaluer';
         this.evaluations = [];
         this.totalEvaluations = 0;
@@ -38,10 +39,18 @@ var EvaluationComponent = /** @class */ (function () {
         this.optionsStatut = ['Tout les statuts', 'Évalué', 'Non Évalué'];
         this.Math = Math;
         this.modeVoir = false;
+        this.candidatSelectionne = null;
     }
     EvaluationComponent.prototype.ngOnInit = function () {
         this.chargerEvaluations();
         this.modeVoir = this.evaluationService.getViewMode();
+    };
+    EvaluationComponent.prototype.ngDoCheck = function () {
+        if (this.evaluationState.resetEvaluations) {
+            this.evaluations = [];
+            this.filtres = { statut: 'Tout les statuts', candidat: '' };
+            this.evaluationState.resetEvaluations = false;
+        }
     };
     EvaluationComponent.prototype.chargerEvaluations = function () {
         var _this = this;
@@ -147,6 +156,10 @@ var EvaluationComponent = /** @class */ (function () {
             }
             this.totalEvaluations = filtered.length;
             // 5. Pagination
+            var totalPages = Math.ceil(this.totalEvaluations / this.evaluationsParPage) || 1;
+            if (this.pageActuelle > totalPages) {
+                this.pageActuelle = 1;
+            }
             var debut = (this.pageActuelle - 1) * this.evaluationsParPage;
             var fin = debut + this.evaluationsParPage;
             return filtered.slice(debut, fin);
@@ -216,16 +229,9 @@ var EvaluationComponent = /** @class */ (function () {
             imports: [
                 common_1.CommonModule,
                 forms_1.FormsModule,
-                standalone_1.IonIcon,
-                standalone_1.IonButton,
-                standalone_1.IonCard,
-                standalone_1.IonCardContent,
-                standalone_1.IonInput,
-                standalone_1.IonBadge,
-                standalone_1.IonSegment,
-                standalone_1.IonSegmentButton,
-                standalone_1.IonList,
-                standalone_1.IonItem
+                // IonIcon,
+                // IonButton,
+                angular_1.IonicModule,
             ]
         })
     ], EvaluationComponent);

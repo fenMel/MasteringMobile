@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, DoCheck } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -6,7 +6,8 @@ import { IonIcon, IonButton, IonCard, IonCardContent, IonInput, IonBadge, IonSeg
 
 import { Evaluation, FiltresEvaluation } from './evaluation.model';
 import { EvaluationService } from '../../services/evaluation.service';
-import { IonSpinner } from '@ionic/angular';
+import { EvaluationStateService } from '../../services/evaluation-state.service';
+import { IonicModule, IonLabel, IonSpinner } from '@ionic/angular';
 
 @Component({
   standalone: true,
@@ -16,20 +17,21 @@ import { IonSpinner } from '@ionic/angular';
   imports: [
     CommonModule,
     FormsModule,
-    IonIcon,
-    IonButton,
-    IonCard,
-    IonCardContent,
-    IonInput,
-    IonBadge,
-    IonSegment,
-    IonSegmentButton,
-    IonList,
-    IonItem
+    // IonIcon,
+    // IonButton,
+    IonicModule,
+    // IonCard,
+    // IonCardContent,
+    // IonInput,
+    // IonBadge
+    // IonSegment,
+    // IonSegmentButton,
+    // IonList,
+    // IonItem
     
   ]
 })
-export class EvaluationComponent implements OnInit {
+export class EvaluationComponent implements OnInit, DoCheck {
   ongletActif: string = 'aEvaluer'; 
 
   evaluations: Evaluation[] = [];
@@ -54,15 +56,25 @@ export class EvaluationComponent implements OnInit {
   Math: Math = Math;
 
   modeVoir: boolean = false;
+  candidatSelectionne: any = null;
 
   constructor(
     private evaluationService: EvaluationService,
-    private router: Router
+    private router: Router,
+    private evaluationState: EvaluationStateService
   ) {}
 
   ngOnInit(): void {
     this.chargerEvaluations();
     this.modeVoir = this.evaluationService.getViewMode();
+  }
+
+  ngDoCheck() {
+    if (this.evaluationState.resetEvaluations) {
+      this.evaluations = [];
+      this.filtres = { statut: 'Tout les statuts', candidat: '' };
+      this.evaluationState.resetEvaluations = false;
+    }
   }
 
   chargerEvaluations(): void {
@@ -188,9 +200,13 @@ export class EvaluationComponent implements OnInit {
   this.totalEvaluations = filtered.length;
 
     // 5. Pagination
+    const totalPages = Math.ceil(this.totalEvaluations / this.evaluationsParPage) || 1;
+    if (this.pageActuelle > totalPages) {
+      this.pageActuelle = 1;
+    }
     const debut = (this.pageActuelle - 1) * this.evaluationsParPage;
-const fin = debut + this.evaluationsParPage;
-return filtered.slice(debut, fin);
+    const fin = debut + this.evaluationsParPage;
+    return filtered.slice(debut, fin);
   }
 
   get pages(): number[] {

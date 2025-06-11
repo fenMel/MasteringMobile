@@ -18,6 +18,7 @@ import {
   IonSplitPane
 } from '@ionic/angular/standalone';
 import { EvaluationComponent } from '../evaluation/evaluation.component';
+import { EvaluationStateService } from 'src/app/services/evaluation-state.service';
 
 @Component({
   selector: 'app-jury-dashboard',
@@ -48,9 +49,14 @@ export class JuryDashboardComponent {
   juryName = 'Nom Jury'; // À remplacer par la vraie donnée si besoin
 
   @ViewChild(IonMenu) menu!: IonMenu;
+  constructor(private evaluationState: EvaluationStateService) {}
 
   logout() {
+        this.evaluationState.resetEvaluations = true;
+
     localStorage.clear();
+      sessionStorage.clear();
+
     window.location.href = '/login';
   }
 }

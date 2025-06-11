@@ -38,6 +38,7 @@ var AjouterEvaluationComponent = /** @class */ (function () {
         this.modeVoir = false;
         this.contributions = {};
         this.evaluationLoadedData = null;
+        this.filtreStatut = '';
         this.destroy$ = new rxjs_1.Subject();
         this.isDeleting = false;
         this.deleteTimeout = null;
@@ -342,7 +343,6 @@ var AjouterEvaluationComponent = /** @class */ (function () {
     AjouterEvaluationComponent.prototype.modifierEvaluation = function () {
         this.modeVoir = false;
         this.evaluationForm.enable();
-        console.log('Mode set to Modifier. Form enabled.');
     };
     AjouterEvaluationComponent.prototype.voirEvaluation = function () {
         this.modeVoir = true;

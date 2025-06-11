@@ -55,8 +55,7 @@ import {
   home,
   add,
   search,
-  personCircle,
-} from 'ionicons/icons';
+  personCircle, logOutOutline, peopleOutline, mailOutline, callOutline, cameraOutline, createOutline, calendarOutline, personCircleOutline, notificationsOutline, cloudUploadOutline, closeSharp, closeOutline } from 'ionicons/icons';
 
 
 import { FormsModule } from '@angular/forms';
@@ -64,7 +63,9 @@ import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 import {RouterLinkActive, RouterOutlet} from "@angular/router";
 import {Coordinator, Student} from "../../models/students";
 import {DataService} from "../../services/data.service";
-
+import { EvaluationComponent } from '../evaluation/evaluation.component';
+import { EvaluationStateService } from 'src/app/services/evaluation-state.service';
+import { GestionEvaluationComponent } from '../gestion-evaluation/gestion-evaluation.component';
 
 
 @Component({
@@ -95,6 +96,7 @@ import {DataService} from "../../services/data.service";
     IonSplitPane,
     IonTitle,
     IonToast,
+    GestionEvaluationComponent,
     IonToolbar, NgIf, FormsModule, TitleCasePipe, IonAlert, IonAlert, IonApp, IonItemSliding, NgForOf, IonSpinner, IonDatetime
   ],
   providers: [
@@ -227,14 +229,11 @@ export class CoordinatorDashboardComponent implements OnInit {
     private modalCtrl: ModalController,
     private alertCtrl: AlertController,
     private toastCtrl: ToastController,
+    private evaluationState: EvaluationStateService,
     private router: Router
   ) {
 
-    addIcons({
-      person, folder, calendar, notifications, settings, logOut,
-      documentText, time, checkmarkCircle, briefcase, business,
-      chevronForward, arrowForward, home, add, search, personCircle
-    });
+    addIcons({homeOutline,personOutline,peopleOutline,settingsOutline,logOutOutline,mailOutline,callOutline,cameraOutline,saveOutline,addOutline,createOutline,trashOutline,calendarOutline,personCircleOutline,notificationsOutline,cloudUploadOutline,closeSharp,closeOutline,person,folder,calendar,notifications,settings,logOut,documentText,time,checkmarkCircle,briefcase,business,chevronForward,arrowForward,home,add,search,personCircle});
   }
 
 

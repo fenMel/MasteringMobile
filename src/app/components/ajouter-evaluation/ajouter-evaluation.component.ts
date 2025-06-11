@@ -109,6 +109,7 @@ export class AjouterEvaluationComponent implements OnInit, OnDestroy {
   contributions: { [key: string]: number } = {};
   evaluationLoadedData: any = null;
   private initialFormValue: any;
+  filtreStatut: string = '';
 
   @Input() setSousMenu!: (val: string) => void;
   private destroy$ = new Subject<void>();
@@ -444,7 +445,6 @@ export class AjouterEvaluationComponent implements OnInit, OnDestroy {
   modifierEvaluation() {
     this.modeVoir = false;
     this.evaluationForm.enable();
-    console.log('Mode set to Modifier. Form enabled.');
   }
 
   voirEvaluation(): void {

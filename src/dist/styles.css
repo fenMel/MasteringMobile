@@ -1,0 +1,8 @@
+.confirmation-modal .modal-wrapper {
+  background: #fff !important;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  max-width: 350px;
+  margin: auto;
+  padding: 0;
+}

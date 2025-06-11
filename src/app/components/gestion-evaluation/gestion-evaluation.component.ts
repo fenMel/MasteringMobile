@@ -1,13 +1,15 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
-import { forkJoin } from 'rxjs';
+import { Router, ActivatedRoute, Routes } from '@angular/router';
+import { forkJoin, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { Evaluation, FiltresEvaluation } from './evaluation.model';
 import { EvaluationService } from '../../services/evaluation.service';
 
 import { IonicModule, ToastController } from '@ionic/angular';
+import { AjouterEvaluationComponent } from '../ajouter-evaluation/ajouter-evaluation.component';
 
 @Component({
   selector: 'app-gestion-evaluation',
@@ -20,7 +22,7 @@ import { IonicModule, ToastController } from '@ionic/angular';
   templateUrl: './gestion-evaluation.component.html',
   styleUrls: ['./gestion-evaluation.component.scss']
 })
-export class GestionEvaluationComponent implements OnInit {
+export class GestionEvaluationComponent implements OnInit, OnDestroy {
   evaluations: Evaluation[] = [];
   totalEvaluations: number = 0;
   pageActuelle: number = 1;
@@ -45,6 +47,8 @@ showDatePicker = false;
   Math: Math = Math;
 
   modeVoir: boolean = false;
+
+  private destroy$ = new Subject<void>();
 
   constructor(
     private evaluationService: EvaluationService,
@@ -80,6 +84,17 @@ showDatePicker = false;
         this.showSuccess('Suppression réussie');
       }
     });
+
+    this.evaluationService.refreshList$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.chargerEvaluations(); // Recharge la liste à chaque événement
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   chargerEvaluations(): void {
@@ -253,51 +268,17 @@ showDatePicker = false;
     this.evaluationService.setSelectedEvaluationId(evaluation.id);
     this.evaluationService.setViewMode(false);
 
-    if (this.setSousMenu) {
-      this.setSousMenu('ajouter-evaluation');
-    } else {
-      this.router.navigate(['/dashboard'], {
-        queryParams: {
-          menu: 'soutenances',
-          sousMenu: 'ajouter-evaluation',
-        }
-      });
-    }
+    // Redirection avec l'ID de l'évaluation
+    this.router.navigate(['/ajouter-evaluation', evaluation.id]);
   }
 
   voirEvaluation(evaluation: Evaluation): void {
     this.evaluationService.setViewMode(true);
+    this.evaluationService.setSelectedEvaluationId(evaluation.id);
+    this.evaluationService.setSelectedCandidatId(evaluation.candidatId);
 
-    if (evaluation && evaluation.id && evaluation.candidatId) {
-      this.evaluationService.setSelectedEvaluationId(evaluation.id);
-      this.evaluationService.setSelectedCandidatId(evaluation.candidatId);
-      this.evaluationService.setViewMode(true);
-
-      const currentUser = this.evaluationService.getCurrentUser();
-      if (currentUser) {
-        const juryId = currentUser.id;
-        console.log('Jury ID connecté :', juryId);
-      } else {
-        console.warn('Aucun utilisateur connecté trouvé.');
-      }
-
-      this.evaluationService.getCandidat(evaluation.candidatId).subscribe(
-        (candidatInfo) => {
-          this.evaluationService.setSelectedCandidatDetails(candidatInfo);
-        },
-        (error) => {
-          this.evaluationService.setSelectedCandidatDetails(null);
-        }
-      );
-
-      if (this.setSousMenu) {
-        this.setSousMenu('ajouter-evaluation');
-      } else {
-        this.router.navigate(['/dashboard'], {
-          queryParams: { menu: 'soutenances', sousMenu: 'ajouter-evaluation' }
-        });
-      }
-    }
+    // Redirection avec l'ID de l'évaluation
+    this.router.navigate(['/ajouter-evaluation', evaluation.id]);
   }
 
   getNomPrenomCandidat(candidat: { nom: string; prenom: string }): string {
@@ -329,3 +310,9 @@ showDatePicker = false;
     });
   }
 }
+
+const routes: Routes = [
+  // ... autres routes ...
+  { path: 'ajouter-evaluation', component: AjouterEvaluationComponent },
+  // ... autres routes ...
+];

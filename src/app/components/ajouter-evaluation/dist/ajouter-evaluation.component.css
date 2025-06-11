@@ -56,13 +56,12 @@ ion-note {
   justify-content: center;
   font-size: 1.2em;
   margin-bottom: 12px;
-
-  .note-value {
-    margin-left: 10px;
-    font-size: 1.3em;
-    font-weight: bold;
-    padding: 6px 16px;
-  }
+}
+.note-finale .note-value {
+  margin-left: 10px;
+  font-size: 1.3em;
+  font-weight: bold;
+  padding: 6px 16px;
 }
 
 ion-button {
@@ -80,23 +79,25 @@ ion-spinner {
     margin-left: 0;
     margin-right: 0;
   }
+
   .note-finale {
     flex-direction: column;
-    .note-value {
-      margin-left: 0;
-      margin-top: 6px;
-    }
+  }
+  .note-finale .note-value {
+    margin-left: 0;
+    margin-top: 6px;
   }
 }
 .snackbar-error {
-  background: #e53935 !important; // rouge vif
+  background: #e53935 !important;
   color: #fff !important;
   font-weight: bold;
   letter-spacing: 0.5px;
   text-align: center;
 }
+
 .snackbar-success {
-  background: #43a047 !important; // vert succès
+  background: #43a047 !important;
   color: #fff !important;
   font-weight: bold;
   letter-spacing: 0.5px;

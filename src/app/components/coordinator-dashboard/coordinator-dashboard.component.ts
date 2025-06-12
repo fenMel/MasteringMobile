@@ -66,7 +66,7 @@ import {DataService} from "../../services/data.service";
 import { EvaluationComponent } from '../evaluation/evaluation.component';
 import { EvaluationStateService } from 'src/app/services/evaluation-state.service';
 import { GestionEvaluationComponent } from '../gestion-evaluation/gestion-evaluation.component';
-
+import{DecisionComponent} from "../decision/decision.component";
 
 @Component({
   selector: 'app-coordinator-dashboard',
@@ -97,6 +97,7 @@ import { GestionEvaluationComponent } from '../gestion-evaluation/gestion-evalua
     IonTitle,
     IonToast,
     GestionEvaluationComponent,
+    DecisionComponent,
     IonToolbar, NgIf, FormsModule, TitleCasePipe, IonAlert, IonAlert, IonApp, IonItemSliding, NgForOf, IonSpinner, IonDatetime
   ],
   providers: [

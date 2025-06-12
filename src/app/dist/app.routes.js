@@ -74,6 +74,11 @@ exports.routes = [
         canActivate: [AuthGuard_1.AuthGuard]
     },
     {
+        path: 'decision/:id',
+        loadComponent: function () { return Promise.resolve().then(function () { return require('./components/decision/decision.component'); }).then(function (m) { return m.DecisionComponent; }); },
+        canActivate: [AuthGuard_1.AuthGuard]
+    },
+    {
         path: 'unauthorized',
         loadComponent: function () { return Promise.resolve().then(function () { return require('./components/unauthorized/unauthorized.component'); }).then(function (m) { return m.UnauthorizedComponent; }); }
     },

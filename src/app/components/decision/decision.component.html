@@ -1,3 +1,66 @@
-<p>
-  decision works!
-</p>
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Décisions des Candidats</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-content>
+      <ion-item lines="none">
+        <ion-label>Filtrer par :</ion-label>
+        <ion-select [(ngModel)]="filtres.statut" (ionChange)="appliquerFiltres()" interface="popover">
+          <ion-select-option *ngFor="let option of optionsStatut" [value]="option">{{ option }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item lines="none">
+        <ion-input
+          [(ngModel)]="filtres.recherche"
+          placeholder="Rechercher un candidat ou jury..."
+          (keyup.enter)="appliquerFiltres()"
+          clearInput
+          (ionClear)="filtres.recherche=''; appliquerFiltres()">
+        </ion-input>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-list>
+    <ion-item *ngFor="let decision of decisionsAffichees" lines="full">
+      <ion-label>
+        <h2>{{ decision.candidat.nom }} {{ decision.candidat.prenom }}</h2>
+        <p>Jury : {{ decision.jury.nom }} {{ decision.jury.prenom }}</p>
+        <p>
+          <ion-badge [color]="getStatutColor(decision)">
+            {{ decision.verdict || 'Non défini' }}
+          </ion-badge>
+        </p>
+      </ion-label>
+      <ion-button slot="end" fill="outline" size="small" (click)="voirDecision(decision)">
+        Voir
+      </ion-button>
+    </ion-item>
+  </ion-list>
+
+  <ion-footer class="ion-padding">
+    <div class="pagination-info">
+      Affichage de
+      {{ (pageActuelle - 1) * decisionsParPage + 1 }}-{{ minPage }}
+      sur {{ totalDecisions }} décisions
+    </div>
+    <ion-segment [value]="pageActuelle" (ionChange)="changerPage($event.detail.value ? +$event.detail.value : undefined)">
+      <ion-segment-button *ngFor="let page of pages" [value]="page">
+        {{ page }}
+      </ion-segment-button>
+    </ion-segment>
+    <div class="pagination-controls ion-text-center ion-margin-top">
+      <ion-button size="small" [disabled]="pageActuelle === 1" (click)="changerPage(1)">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </ion-button>
+      <ion-button size="small" [disabled]="pageActuelle === pages.length" (click)="changerPage(pages.length)">
+        <ion-icon name="chevron-forward-outline"></ion-icon>
+      </ion-button>
+    </div>
+  </ion-footer>
+</ion-content>

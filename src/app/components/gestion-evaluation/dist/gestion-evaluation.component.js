@@ -54,7 +54,9 @@ var core_1 = require("@angular/core");
 var common_1 = require("@angular/common");
 var forms_1 = require("@angular/forms");
 var rxjs_1 = require("rxjs");
+var operators_1 = require("rxjs/operators");
 var angular_1 = require("@ionic/angular");
+var ajouter_evaluation_component_1 = require("../ajouter-evaluation/ajouter-evaluation.component");
 var GestionEvaluationComponent = /** @class */ (function () {
     function GestionEvaluationComponent(evaluationService, router, route, toastController) {
         this.evaluationService = evaluationService;
@@ -79,6 +81,7 @@ var GestionEvaluationComponent = /** @class */ (function () {
         this.optionsStatut = ['Tout les statuts', 'Évalué', 'Non Évalué'];
         this.Math = Math;
         this.modeVoir = false;
+        this.destroy$ = new rxjs_1.Subject();
     }
     GestionEvaluationComponent.prototype.showSuccess = function (message) {
         return __awaiter(this, void 0, Promise, function () {
@@ -125,6 +128,15 @@ var GestionEvaluationComponent = /** @class */ (function () {
                 _this.showSuccess('Suppression réussie');
             }
         });
+        this.evaluationService.refreshList$
+            .pipe(operators_1.takeUntil(this.destroy$))
+            .subscribe(function () {
+            _this.chargerEvaluations(); // Recharge la liste à chaque événement
+        });
+    };
+    GestionEvaluationComponent.prototype.ngOnDestroy = function () {
+        this.destroy$.next();
+        this.destroy$.complete();
     };
     GestionEvaluationComponent.prototype.chargerEvaluations = function () {
         var _this = this;
@@ -293,47 +305,15 @@ var GestionEvaluationComponent = /** @class */ (function () {
         this.evaluationService.setSelectedCandidatId(evaluation.candidatId);
         this.evaluationService.setSelectedEvaluationId(evaluation.id);
         this.evaluationService.setViewMode(false);
-        if (this.setSousMenu) {
-            this.setSousMenu('ajouter-evaluation');
-        }
-        else {
-            this.router.navigate(['/dashboard'], {
-                queryParams: {
-                    menu: 'soutenances',
-                    sousMenu: 'ajouter-evaluation'
-                }
-            });
-        }
+        // Redirection avec l'ID de l'évaluation
+        this.router.navigate(['/ajouter-evaluation', evaluation.id]);
     };
     GestionEvaluationComponent.prototype.voirEvaluation = function (evaluation) {
-        var _this = this;
         this.evaluationService.setViewMode(true);
-        if (evaluation && evaluation.id && evaluation.candidatId) {
-            this.evaluationService.setSelectedEvaluationId(evaluation.id);
-            this.evaluationService.setSelectedCandidatId(evaluation.candidatId);
-            this.evaluationService.setViewMode(true);
-            var currentUser = this.evaluationService.getCurrentUser();
-            if (currentUser) {
-                var juryId = currentUser.id;
-                console.log('Jury ID connecté :', juryId);
-            }
-            else {
-                console.warn('Aucun utilisateur connecté trouvé.');
-            }
-            this.evaluationService.getCandidat(evaluation.candidatId).subscribe(function (candidatInfo) {
-                _this.evaluationService.setSelectedCandidatDetails(candidatInfo);
-            }, function (error) {
-                _this.evaluationService.setSelectedCandidatDetails(null);
-            });
-            if (this.setSousMenu) {
-                this.setSousMenu('ajouter-evaluation');
-            }
-            else {
-                this.router.navigate(['/dashboard'], {
-                    queryParams: { menu: 'soutenances', sousMenu: 'ajouter-evaluation' }
-                });
-            }
-        }
+        this.evaluationService.setSelectedEvaluationId(evaluation.id);
+        this.evaluationService.setSelectedCandidatId(evaluation.candidatId);
+        // Redirection avec l'ID de l'évaluation
+        this.router.navigate(['/ajouter-evaluation', evaluation.id]);
     };
     GestionEvaluationComponent.prototype.getNomPrenomCandidat = function (candidat) {
         var _a, _b;
@@ -384,3 +364,7 @@ var GestionEvaluationComponent = /** @class */ (function () {
     return GestionEvaluationComponent;
 }());
 exports.GestionEvaluationComponent = GestionEvaluationComponent;
+var routes = [
+    // ... autres routes ...
+    { path: 'ajouter-evaluation', component: ajouter_evaluation_component_1.AjouterEvaluationComponent },
+];

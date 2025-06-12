@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable, forkJoin, BehaviorSubject, map, catchError } from 'rxjs';
+import { Observable, forkJoin, BehaviorSubject, Subject, map, catchError } from 'rxjs';
 import { of } from 'rxjs';
 import { Evaluation } from '../components/evaluation/evaluation.model';
 import { AuthService } from './auth.service';
@@ -18,6 +18,9 @@ export class EvaluationService {
 
   private selectedCandidatDetailsSource = new BehaviorSubject<any | null>(null);
   selectedCandidatDetails$ = this.selectedCandidatDetailsSource.asObservable();
+
+  private refreshListSubject = new Subject<void>();
+  refreshList$ = this.refreshListSubject.asObservable();
 
   constructor(private authService: AuthService, private http: HttpClient) {}
 
@@ -302,5 +305,9 @@ export class EvaluationService {
       },
       { headers: this.getAuthHeaders() }
     );
+  }
+
+  emitRefreshList() {
+    this.refreshListSubject.next();
   }
 }

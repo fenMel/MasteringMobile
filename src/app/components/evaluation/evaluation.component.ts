@@ -1,8 +1,10 @@
-import { Component, Input, OnInit, DoCheck } from '@angular/core';
+import { Component, Input, OnInit, DoCheck, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { IonIcon, IonButton, IonCard, IonCardContent, IonInput, IonBadge, IonSegment, IonSegmentButton, IonList, IonItem } from '@ionic/angular/standalone';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { Evaluation, FiltresEvaluation } from './evaluation.model';
 import { EvaluationService } from '../../services/evaluation.service';
@@ -31,7 +33,9 @@ import { IonicModule, IonLabel, IonSpinner } from '@ionic/angular';
     
   ]
 })
-export class EvaluationComponent implements OnInit, DoCheck {
+export class EvaluationComponent implements OnInit, DoCheck, OnDestroy {
+  private destroy$ = new Subject<void>();
+
   ongletActif: string = 'aEvaluer'; 
 
   evaluations: Evaluation[] = [];
@@ -67,6 +71,13 @@ export class EvaluationComponent implements OnInit, DoCheck {
   ngOnInit(): void {
     this.chargerEvaluations();
     this.modeVoir = this.evaluationService.getViewMode();
+
+    // Abonnement à l'événement de rafraîchissement
+    this.evaluationService.refreshList$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.chargerEvaluations();
+      });
   }
 
   ngDoCheck() {
@@ -75,6 +86,11 @@ export class EvaluationComponent implements OnInit, DoCheck {
       this.filtres = { statut: 'Tout les statuts', candidat: '' };
       this.evaluationState.resetEvaluations = false;
     }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   chargerEvaluations(): void {

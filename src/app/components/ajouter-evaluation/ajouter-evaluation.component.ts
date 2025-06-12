@@ -9,30 +9,32 @@ import { takeUntil } from 'rxjs/operators';
 import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
+import { ModalController } from '@ionic/angular';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 import {
-  IonContent,
-  IonCard,
-  IonCardHeader,
-  IonCardTitle,
-  IonCardSubtitle,
-  IonCardContent,
-  IonItem,
-  IonLabel,
-  IonButton,
-  IonBadge,
-  IonList,
-  IonSpinner,
+  // IonContent,
+  // IonCard,
+  // IonCardHeader,
+  // IonCardTitle,
+  // IonCardSubtitle,
+  // IonCardContent,
+  // IonItem,
+  // IonLabel,
+  // IonButton,
+  // IonBadge,
+  // IonList,
+  // IonSpinner,
   IonText,
-  IonNote,
-  IonItemDivider,
-  IonGrid,
-  IonRow,
-  IonCol,
-  IonTextarea,
-  IonInput
+  // IonNote,
+  // IonItemDivider,
+  // IonGrid,
+  // IonRow,
+  // IonCol,
+  // IonTextarea,
+  // IonInput
 } from '@ionic/angular/standalone';
 import { Location } from '@angular/common';
+import { IonicModule } from '@ionic/angular';
 
 interface Candidat {
   id: number;
@@ -73,26 +75,27 @@ interface Evaluation {
     MatDialogModule,
     MatButtonModule,
     DatePipe,
-    IonContent,
-    IonCard,
-    IonCardHeader,
-    IonCardTitle,
-    IonCardSubtitle,
-    IonCardContent,
-    IonItem,
-    IonLabel,
-    IonButton,
-    IonBadge,
-    IonList,
-    IonSpinner,
+    // IonContent,
+    // IonCard,
+    // IonCardHeader,
+    // IonCardTitle,
+    // IonCardSubtitle,
+    // IonCardContent,
+    // IonItem,
+    // IonLabel,
+    // IonButton,
+    // IonBadge,
+    // IonList,
+    // IonSpinner,
     IonText,
-    IonNote,
-    IonItemDivider,
-    IonGrid,
-    IonRow,
-    IonCol,
-    IonTextarea,
-    IonInput
+    // IonNote,
+    // IonItemDivider,
+    // IonGrid,
+    // IonRow,
+    // IonCol,
+    // IonTextarea,
+    // IonInput,
+    IonicModule
   ],
 })
 export class AjouterEvaluationComponent implements OnInit, OnDestroy {
@@ -122,7 +125,8 @@ export class AjouterEvaluationComponent implements OnInit, OnDestroy {
     public authService: AuthService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
-    private location: Location
+    private location: Location,
+    private modalCtrl: ModalController
   ) {
     this.evaluationForm = this.fb.group({
       note_clarte: ['', [Validators.required, Validators.min(0), Validators.max(20)]],
@@ -184,6 +188,19 @@ export class AjouterEvaluationComponent implements OnInit, OnDestroy {
     this.evaluationForm.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.calculerNoteFinale();
     });
+
+    this.evaluationService.refreshList$.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      this.chargerEvaluations();
+    });
+  }
+
+  // Ajoute la méthode pour recharger les évaluations (à adapter selon besoin)
+  chargerEvaluations(): void {
+    // Cette méthode peut être adaptée pour recharger la liste ou rafraîchir les données selon votre logique.
+    // Ici, on recharge les données du candidat et de l'évaluation courante si les IDs sont présents.
+    if (this.candidatId) {
+      this.chargerDonnees(this.candidatId, this.evaluationId ?? null);
+    }
   }
 
   ngOnDestroy(): void {
@@ -270,24 +287,28 @@ export class AjouterEvaluationComponent implements OnInit, OnDestroy {
     this.calculerNoteFinale();
   }
 
-   annuler(): void {
-  const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-    data: {
-      title: 'Confirmation',
-      message: 'Êtes-vous sûr de vouloir annuler cette évaluation ? Toutes les modifications non sauvegardées seront perdues.'
-    }
+   async annuler(): Promise<void> {
+  const modal = await this.modalCtrl.create({
+    component: ConfirmationDialogComponent,
+    componentProps: {
+      data: {
+        title: 'Confirmation',
+        message: 'Êtes-vous sûr de vouloir annuler cette évaluation ? Toutes les modifications non sauvegardées seront perdues.',
+        confirmButtonText: 'Oui, annuler'
+      }
+    },
+    cssClass: 'confirmation-modal'
   });
-
-  dialogRef.afterClosed().subscribe(result => {
-    if (result === true) {
-      this.modeVoir = true;
-      this.evaluationForm.disable();
-      this.snackBar.open('Édition annulée.', undefined, {
-        duration: 2000,
-        panelClass: 'snackbar-error'
-      });
-    }
-  });
+  await modal.present();
+  const { role } = await modal.onWillDismiss();
+  if (role === 'confirm') {
+    this.modeVoir = true;
+    this.evaluationForm.disable();
+    this.snackBar.open('Édition annulée.', undefined, {
+      duration: 2000,
+      panelClass: 'snackbar-error'
+    });
+  }
 }
 
 
@@ -362,7 +383,8 @@ export class AjouterEvaluationComponent implements OnInit, OnDestroy {
                 duration: 2000,
                 panelClass: 'snackbar-success'
               });
-              this.retourListe();
+              this.evaluationService.emitRefreshList();
+this.retourListe();
             },
             error: (err) => {
               console.error("Error saving evaluation:", err);
@@ -412,6 +434,10 @@ export class AjouterEvaluationComponent implements OnInit, OnDestroy {
           duration: 2000,
           panelClass: 'snackbar-success'
         });
+
+        // Notifie la liste de se rafraîchir
+        this.evaluationService.emitRefreshList();
+
         // Appel à addOrUpdateDecision pour mettre à jour la décision du candidat
         if (this.candidatId && this.juryId) {
           this.evaluationService.addOrUpdateDecision(
@@ -456,70 +482,42 @@ export class AjouterEvaluationComponent implements OnInit, OnDestroy {
 public isDeleting = false;
 private deleteTimeout: any = null;
 
-supprimerEvaluation(): void {
-   console.log('ID évaluation actuel:', this.evaluationId, 
-              'Source:', this.route.snapshot.params, 
-              'Service:', this.evaluationService.getSelectedEvaluationId());
-  // Debug explicite
-  console.log('Appel à supprimerEvaluation', {
-    isDeleting: this.isDeleting,
-    evaluationId: this.evaluationId
-  });
-
-  if( this.isDeleting) {
-    console.log('Blocage: suppression déjà en cours');
-    return;
-  }
-
-  // Protection double-clic
-  this.isDeleting = true;
-  this.deleteTimeout = setTimeout(() => {
-    this.isDeleting = false;
-  }, 3000); // Réinitialise après 3s même en cas d'erreur
-
-  if (!this.evaluationId) {
-    console.error('Erreur critique: evaluationId manquant', {
-      routeParams: this.route.snapshot.params,
-      serviceData: this.evaluationService.getSelectedEvaluationId(),
-      componentState: {
-        evaluationId: this.evaluationId,
-        candidatId: this.candidatId
+async supprimerEvaluation() {
+  const modal = await this.modalCtrl.create({
+    component: ConfirmationDialogComponent,
+    componentProps: {
+      data: {
+        title: 'Confirmation',
+        message: 'Voulez-vous vraiment supprimer cette évaluation ?',
+        confirmButtonText: 'Oui, supprimer'
       }
-    });
-    this.snackBar.open('Erreur: Évaluation introuvable', 'OK', { duration: 3000 });
-    return;
-  }
-  const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-    disableClose: true,
-    data: {
-      title: 'Confirmation',
-      message: 'Êtes-vous sûr de vouloir supprimer cette évaluation ?'
-    }
+    },
+    cssClass: 'confirmation-modal'
   });
-
-  dialogRef.afterClosed().pipe(
-    takeUntil(this.destroy$)
-  ).subscribe(confirmed => {
-    if (!confirmed) {
-      this.resetDeleteState();
+  await modal.present();
+  const { role } = await modal.onWillDismiss();
+  if (role === 'confirm') {
+    if (!this.evaluationId) {
+      this.snackBar.open('Erreur : aucune évaluation à supprimer.', undefined, { duration: 3000, panelClass: 'snackbar-error' });
       return;
     }
-    this.executeDelete();
-  });
-}
-
-private executeDelete(): void {
-  this.evaluationService.resetEvaluation(this.evaluationId!).pipe(
-    takeUntil(this.destroy$)
-  ).subscribe({
-    next: () => this.handleDeleteSuccess(),
-    error: (err) => this.handleDeleteError(err)
-  });
+    this.isDeleting = true;
+    this.evaluationService.resetEvaluation(this.evaluationId).pipe(takeUntil(this.destroy$)).subscribe({
+      next: () => this.handleDeleteSuccess(),
+      error: (err) => this.handleDeleteError(err)
+    });
+  }
 }
 
 private handleDeleteSuccess(): void {
   this.resetDeleteState();
-  this.snackBar.open('Évaluation supprimée.', undefined, { duration: 10000, panelClass: 'snackbar-success' });
+  this.snackBar.open('Évaluation supprimée.', undefined, {
+    duration: 3000,
+    panelClass: 'snackbar-success'
+  });
+
+  // Notifie la liste de se rafraîchir
+  this.evaluationService.emitRefreshList();
 
   // Appel à addOrUpdateDecision pour mettre à jour la décision du candidat
   if (this.candidatId && this.juryId) {
@@ -535,7 +533,10 @@ private handleDeleteSuccess(): void {
 private handleDeleteError(err: any): void {
   console.error('Erreur suppression:', err);
   this.resetDeleteState();
-  this.snackBar.open('Échec de la suppression', 'OK', { duration: 3000 });
+  this.snackBar.open('Échec de la suppression', undefined, {
+    duration: 3000,
+    panelClass: 'snackbar-error'
+  });
 }
 
 private resetDeleteState(): void {
@@ -544,6 +545,13 @@ private resetDeleteState(): void {
   console.log('État suppression réinitialisé');
 }
 retourListe(): void {
-  this.location.back();
+  const role = this.authService.getCurrentUser()?.role;
+  if (role === 'coordinateur' || role === 'coordonateur') {
+    this.router.navigate(['/gestion-evaluation']);
+  } else if (role === 'jury') {
+    this.router.navigate(['/evaluation']);
+  } else {
+    this.location.back(); // fallback
+  }
 }
 }

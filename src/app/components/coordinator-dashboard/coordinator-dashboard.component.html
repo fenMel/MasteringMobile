@@ -43,6 +43,14 @@
             <ion-icon name="person-outline" slot="start"></ion-icon>
             <ion-label>Mes évaluations</ion-label>
           </ion-item>
+          <ion-item
+            button
+            (click)="setActiveView('decision'); menu.close()"
+            [class.selected]="activeView === 'decision'"
+            detail="false">
+            <ion-icon name="person-outline" slot="start"></ion-icon>
+            <ion-label>Mes decisions</ion-label>
+          </ion-item>
         <ion-item
           button
           (click)="setActiveView('params'); menu.close()"
@@ -87,6 +95,8 @@
 
     <ion-content class="dashboard-content" [fullscreen]="true">
       <app-gestion-evaluation *ngIf="activeView === 'gestionEvaluations'"></app-gestion-evaluation>
+            <app-decision *ngIf="activeView === 'decision'"></app-decision>
+
       <!-- Les autres vues restent inchangées -->
       <div *ngIf="activeView === 'home'">
         <ion-grid class="dashboard-grid">

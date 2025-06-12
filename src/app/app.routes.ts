@@ -73,6 +73,11 @@ export const routes: Routes = [
     loadComponent: () => import('./components/gestion-evaluation/gestion-evaluation.component').then(m => m.GestionEvaluationComponent),
     canActivate: [AuthGuard]
   },
+    {
+    path: 'decision/:id',
+    loadComponent: () => import('./components/decision/decision.component').then(m => m.DecisionComponent),
+    canActivate: [AuthGuard]
+  },
   {
     path: 'unauthorized',
     loadComponent: () => import('./components/unauthorized/unauthorized.component').then(m => m.UnauthorizedComponent)

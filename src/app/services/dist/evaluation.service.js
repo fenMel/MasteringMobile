@@ -33,6 +33,8 @@ var EvaluationService = /** @class */ (function () {
         this.viewMode = false;
         this.selectedCandidatDetailsSource = new rxjs_1.BehaviorSubject(null);
         this.selectedCandidatDetails$ = this.selectedCandidatDetailsSource.asObservable();
+        this.refreshListSubject = new rxjs_1.Subject();
+        this.refreshList$ = this.refreshListSubject.asObservable();
     }
     EvaluationService.prototype.getAuthHeaders = function () {
         return new http_1.HttpHeaders({
@@ -259,6 +261,9 @@ var EvaluationService = /** @class */ (function () {
             juryId: juryId,
             commentaireFinal: commentaireFinal
         }, { headers: this.getAuthHeaders() });
+    };
+    EvaluationService.prototype.emitRefreshList = function () {
+        this.refreshListSubject.next();
     };
     EvaluationService = __decorate([
         core_1.Injectable({

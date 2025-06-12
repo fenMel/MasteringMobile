@@ -59,8 +59,18 @@ exports.routes = [
         canActivate: [AuthGuard_1.AuthGuard]
     },
     {
+        path: 'ajouter-evaluation',
+        loadComponent: function () { return Promise.resolve().then(function () { return require('./components/ajouter-evaluation/ajouter-evaluation.component'); }).then(function (m) { return m.AjouterEvaluationComponent; }); },
+        canActivate: [AuthGuard_1.AuthGuard]
+    },
+    {
         path: 'ajouter-evaluation/:id',
         loadComponent: function () { return Promise.resolve().then(function () { return require('./components/ajouter-evaluation/ajouter-evaluation.component'); }).then(function (m) { return m.AjouterEvaluationComponent; }); },
+        canActivate: [AuthGuard_1.AuthGuard]
+    },
+    {
+        path: 'gestion-evaluation/:id',
+        loadComponent: function () { return Promise.resolve().then(function () { return require('./components/gestion-evaluation/gestion-evaluation.component'); }).then(function (m) { return m.GestionEvaluationComponent; }); },
         canActivate: [AuthGuard_1.AuthGuard]
     },
     {

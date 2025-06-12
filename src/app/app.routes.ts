@@ -59,8 +59,18 @@ export const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: 'ajouter-evaluation',
+    loadComponent: () => import('./components/ajouter-evaluation/ajouter-evaluation.component').then(m => m.AjouterEvaluationComponent),
+    canActivate: [AuthGuard]
+  },
+  {
     path: 'ajouter-evaluation/:id',
     loadComponent: () => import('./components/ajouter-evaluation/ajouter-evaluation.component').then(m => m.AjouterEvaluationComponent),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'gestion-evaluation/:id',
+    loadComponent: () => import('./components/gestion-evaluation/gestion-evaluation.component').then(m => m.GestionEvaluationComponent),
     canActivate: [AuthGuard]
   },
   {

@@ -17,12 +17,15 @@ exports.EvaluationComponent = void 0;
 var core_1 = require("@angular/core");
 var common_1 = require("@angular/common");
 var forms_1 = require("@angular/forms");
+var rxjs_1 = require("rxjs");
+var operators_1 = require("rxjs/operators");
 var angular_1 = require("@ionic/angular");
 var EvaluationComponent = /** @class */ (function () {
     function EvaluationComponent(evaluationService, router, evaluationState) {
         this.evaluationService = evaluationService;
         this.router = router;
         this.evaluationState = evaluationState;
+        this.destroy$ = new rxjs_1.Subject();
         this.ongletActif = 'aEvaluer';
         this.evaluations = [];
         this.totalEvaluations = 0;
@@ -42,8 +45,15 @@ var EvaluationComponent = /** @class */ (function () {
         this.candidatSelectionne = null;
     }
     EvaluationComponent.prototype.ngOnInit = function () {
+        var _this = this;
         this.chargerEvaluations();
         this.modeVoir = this.evaluationService.getViewMode();
+        // Abonnement à l'événement de rafraîchissement
+        this.evaluationService.refreshList$
+            .pipe(operators_1.takeUntil(this.destroy$))
+            .subscribe(function () {
+            _this.chargerEvaluations();
+        });
     };
     EvaluationComponent.prototype.ngDoCheck = function () {
         if (this.evaluationState.resetEvaluations) {
@@ -51,6 +61,10 @@ var EvaluationComponent = /** @class */ (function () {
             this.filtres = { statut: 'Tout les statuts', candidat: '' };
             this.evaluationState.resetEvaluations = false;
         }
+    };
+    EvaluationComponent.prototype.ngOnDestroy = function () {
+        this.destroy$.next();
+        this.destroy$.complete();
     };
     EvaluationComponent.prototype.chargerEvaluations = function () {
         var _this = this;

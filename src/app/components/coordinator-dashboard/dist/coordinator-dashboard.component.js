@@ -70,6 +70,7 @@ var icons_1 = require("ionicons/icons");
 var forms_1 = require("@angular/forms");
 var rxjs_1 = require("rxjs");
 var gestion_evaluation_component_1 = require("../gestion-evaluation/gestion-evaluation.component");
+var decision_component_1 = require("../decision/decision.component");
 var CoordinatorDashboardComponent = /** @class */ (function () {
     function CoordinatorDashboardComponent(modalCtrl, alertCtrl, toastCtrl, evaluationState, router) {
         var _this = this;
@@ -371,6 +372,7 @@ var CoordinatorDashboardComponent = /** @class */ (function () {
                 standalone_1.IonTitle,
                 standalone_1.IonToast,
                 gestion_evaluation_component_1.GestionEvaluationComponent,
+                decision_component_1.DecisionComponent,
                 standalone_1.IonToolbar, common_1.NgIf, forms_1.FormsModule, common_1.TitleCasePipe, standalone_1.IonAlert, standalone_1.IonAlert, standalone_1.IonApp, standalone_1.IonItemSliding, common_1.NgForOf, standalone_1.IonSpinner, standalone_1.IonDatetime
             ],
             providers: [

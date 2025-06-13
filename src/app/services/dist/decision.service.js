@@ -64,6 +64,14 @@ var DecisionService = /** @class */ (function () {
             return rxjs_1.of(null);
         }));
     };
+    DecisionService.prototype.getDecisionById = function (id) {
+        return this.http.get(this.apiUrl + "/api/decisions/" + id, {
+            headers: this.getAuthHeaders() // doit inclure Authorization si besoin
+        }).pipe(operators_1.catchError(function (error) {
+            console.error('Erreur lors de la récupération de la décision:', error);
+            return rxjs_1.of(null);
+        }));
+    };
     DecisionService = __decorate([
         core_1.Injectable({ providedIn: 'root' })
     ], DecisionService);

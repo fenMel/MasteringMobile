@@ -79,6 +79,16 @@ exports.routes = [
         canActivate: [AuthGuard_1.AuthGuard]
     },
     {
+        path: 'voir-decision/:id',
+        loadComponent: function () { return Promise.resolve().then(function () { return require('./components/voir-decision/voir-decision.component'); }).then(function (m) { return m.VoirDecisionComponent; }); },
+        canActivate: [AuthGuard_1.AuthGuard]
+    },
+    {
+        path: 'candidat-decision/:id',
+        loadComponent: function () { return Promise.resolve().then(function () { return require('./components/candidat-decision/candidat-decision.component'); }).then(function (m) { return m.CandidatDecisionComponent; }); },
+        canActivate: [AuthGuard_1.AuthGuard]
+    },
+    {
         path: 'unauthorized',
         loadComponent: function () { return Promise.resolve().then(function () { return require('./components/unauthorized/unauthorized.component'); }).then(function (m) { return m.UnauthorizedComponent; }); }
     },

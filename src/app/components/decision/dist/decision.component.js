@@ -19,9 +19,10 @@ var common_1 = require("@angular/common");
 var forms_1 = require("@angular/forms");
 var angular_1 = require("@ionic/angular");
 var DecisionComponent = /** @class */ (function () {
-    function DecisionComponent(decisionService) {
+    function DecisionComponent(decisionService, router) {
         this.decisionService = decisionService;
-        this.decisions = []; // Toutes les décisions chargées
+        this.router = router;
+        this.decisions = [];
         this.filtres = {
             statut: 'Tous les statuts',
             recherche: ''
@@ -96,9 +97,7 @@ var DecisionComponent = /** @class */ (function () {
         }
     };
     DecisionComponent.prototype.voirDecision = function (decision) {
-        if (this.setSousMenu) {
-            this.setSousMenu('voir-decision', decision);
-        }
+        this.router.navigate(['/voir-decision', decision.id], { state: { decision: decision } });
     };
     Object.defineProperty(DecisionComponent.prototype, "minPage", {
         get: function () {
@@ -119,9 +118,6 @@ var DecisionComponent = /** @class */ (function () {
                 return 'medium';
         }
     };
-    __decorate([
-        core_1.Input()
-    ], DecisionComponent.prototype, "setSousMenu");
     DecisionComponent = __decorate([
         core_1.Component({
             selector: 'app-decision',

@@ -1,9 +1,10 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { DecisionService } from '../../services/decision.service';
-import { Decision } from './decision.model';
+import { Decision } from '../decision/decision.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-decision',
@@ -17,8 +18,7 @@ import { Decision } from './decision.model';
   styleUrls: ['./decision.component.scss']
 })
 export class DecisionComponent implements OnInit {
-  @Input() setSousMenu: any;
-  decisions: Decision[] = []; // Toutes les décisions chargées
+  decisions: Decision[] = [];
   filtres = {
     statut: 'Tous les statuts',
     recherche: ''
@@ -28,7 +28,7 @@ export class DecisionComponent implements OnInit {
   decisionsParPage = 5;
   totalDecisions = 0;
 
-  constructor(private decisionService: DecisionService) {}
+  constructor(private decisionService: DecisionService, private router: Router) {}
 
   ngOnInit(): void {
     this.chargerDecisions();
@@ -95,9 +95,7 @@ export class DecisionComponent implements OnInit {
   }
 
   voirDecision(decision: Decision): void {
-    if (this.setSousMenu) {
-      this.setSousMenu('voir-decision', decision);
-    }
+    this.router.navigate(['/voir-decision', decision.id], { state: { decision } });
   }
 
   get minPage(): number {
@@ -117,3 +115,5 @@ export class DecisionComponent implements OnInit {
     }
   }
 }
+
+

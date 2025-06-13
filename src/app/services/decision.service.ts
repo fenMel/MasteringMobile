@@ -78,6 +78,15 @@ export class DecisionService {
     );
   }
 
-  // --- UTILITAIRES ---
-  // Ajoute ici d'autres méthodes si besoin (ex: getDecisionById, etc.)
+ getDecisionById(id: number): Observable<Decision | null> {
+  return this.http.get<Decision>(`${this.apiUrl}/api/decisions/${id}`, {
+    headers: this.getAuthHeaders() // doit inclure Authorization si besoin
+  }).pipe(
+    catchError(error => {
+      console.error('Erreur lors de la récupération de la décision:', error);
+      return of(null);
+    })
+  );
+}
+
 }

@@ -1,17 +1,10 @@
 <ion-app>
   <!-- Side Menu -->
   <ion-menu contentId="main-content" type="overlay" class="modern-menu">
-    <ion-header class="menu-header">
-      <ion-toolbar color="transparent">
-        <div class="menu-profile">
-          <div class="profile-avatar">
-            <ion-icon name="person"></ion-icon>
-          </div>
-          <div class="profile-info">
-            <h3>{{ studentName }}</h3>
-            <p>Candidat</p>
-          </div>
-        </div>
+      <ion-header>
+      <ion-toolbar color="primary">
+      
+        <ion-title>Candidat</ion-title>
       </ion-toolbar>
     </ion-header>
 
@@ -19,51 +12,63 @@
       <div class="menu-section">
         <h4>Navigation</h4>
         <ion-list class="menu-list">
-          <ion-item
+          <!-- <ion-item
             button
             class="menu-item"
-            routerLink="/dashboard/candidat/mes-candidatures"
-            routerLinkActive="active">
+            (click)="setActiveView('mes-candidatures'); closeMenu()"
+            [class.selected]="activeView === 'mes-candidatures'">
             <ion-icon name="folder" slot="start"></ion-icon>
             <ion-label>Mes candidatures</ion-label>
-          </ion-item>
+          </ion-item> -->
 
-          <ion-item
+          <!-- <ion-item
             button
             class="menu-item"
-            routerLink="/dashboard/candidat/profil">
+            (click)="setActiveView('profil'); closeMenu()"
+            [class.selected]="activeView === 'profil'">
             <ion-icon name="person" slot="start"></ion-icon>
             <ion-label>Mon profil</ion-label>
-          </ion-item>
+          </ion-item> -->
 
-          <ion-item
+          <!-- <ion-item
             button
             class="menu-item"
-            routerLink="/dashboard/candidat/entretiens">
+            (click)="setActiveView('entretiens'); closeMenu()"
+            [class.selected]="activeView === 'entretiens'">
             <ion-icon name="calendar" slot="start"></ion-icon>
             <ion-label>Entretiens</ion-label>
-          </ion-item>
+          </ion-item> -->
+
+          <!-- <ion-item
+            button
+            class="menu-item"
+            (click)="setActiveView('notifications'); closeMenu()"
+            [class.selected]="activeView === 'notifications'">
+            <ion-icon name="notifications" slot="start"></ion-icon>
+            <ion-label>Notifications</ion-label>
+          </ion-item> -->
 
           <ion-item
             button
             class="menu-item"
-            routerLink="/dashboard/candidat/notifications">
-            <ion-icon name="notifications" slot="start"></ion-icon>
-            <ion-label>Notifications</ion-label>
+            (click)="setActiveView('candidat-decision'); closeMenu()"
+            [class.selected]="activeView === 'candidat-decision'">
+            <ion-icon name="ribbon" slot="start"></ion-icon>
+            <ion-label>Mes résultats</ion-label>
           </ion-item>
         </ion-list>
       </div>
 
       <div class="menu-section">
-        <h4>Paramètres</h4>
         <ion-list class="menu-list">
-          <ion-item
+          <!-- <ion-item
             button
             class="menu-item"
-            routerLink="/dashboard/candidat/parametres">
+            (click)="setActiveView('parametres'); closeMenu()"
+            [class.selected]="activeView === 'parametres'">
             <ion-icon name="settings" slot="start"></ion-icon>
             <ion-label>Paramètres</ion-label>
-          </ion-item>
+          </ion-item> -->
 
           <ion-item
             button
@@ -78,18 +83,17 @@
   </ion-menu>
 
   <!-- Main Content -->
-  <div id="main-content">
-    <!-- Header -->
-      <ion-header class="modern-header">
+  <div id="main-content" tabindex="-1">
+    <ion-header class="modern-header">
       <ion-toolbar class="header-toolbar">
         <ion-buttons slot="start">
           <ion-menu-button class="menu-toggle"></ion-menu-button>
         </ion-buttons>
 
-        <div class="header-title">
+        <!-- <div class="header-title">
           <h1>Dashboard</h1>
           <p>Bonjour {{ studentName }} 👋</p>
-        </div>
+        </div> -->
 
         <ion-buttons slot="end">
           <ion-button fill="clear" class="notification-btn">
@@ -101,124 +105,30 @@
     </ion-header>
 
     <ion-content class="dashboard-content" [fullscreen]="true">
-      <!-- Welcome Section -->
-      <div class="welcome-section">
-        <div class="welcome-card">
-          <div class="welcome-content">
-            <h2>Bienvenue sur votre dashboard</h2>
-            <p>Gérez vos candidatures et suivez votre progression académique</p>
-          </div>
-          <div class="welcome-illustration">
-            <ion-icon name="person"></ion-icon>
-          </div>
-        </div>
-      </div>
+      <!-- Affiche le composant sur toute la page si la vue active est 'candidat-decision' -->
+      <app-candidat-decision *ngIf="activeView === 'candidat-decision'"></app-candidat-decision>
 
-      <!-- Stats Cards -->
-      <div class="stats-section">
-        <div class="stats-grid">
-          <div class="stat-card primary">
-            <div class="stat-icon">
-              <ion-icon name="document-text"></ion-icon>
-            </div>
-            <div class="stat-content">
-              <h3>{{ stats.applications }}</h3>
-              <p>Candidatures</p>
-            </div>
-          </div>
-
-          <div class="stat-card warning">
-            <div class="stat-icon">
-              <ion-icon name="time"></ion-icon>
-            </div>
-            <div class="stat-content">
-              <h3>{{ stats.pending }}</h3>
-              <p>En attente</p>
-            </div>
-          </div>
-
-          <div class="stat-card success">
-            <div class="stat-icon">
-              <ion-icon name="checkmark-circle"></ion-icon>
-            </div>
-            <div class="stat-content">
-              <h3>{{ stats.accepted }}</h3>
-              <p>Acceptées</p>
-            </div>
-          </div>
-
-          <div class="stat-card tertiary">
-            <div class="stat-icon">
-              <ion-icon name="calendar"></ion-icon>
-            </div>
-            <div class="stat-content">
-              <h3>{{ stats.interviews }}</h3>
-              <p>Entretiens</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Quick Actions -->
-      <div class="section">
-        <div class="section-header">
-          <h3>Actions rapides</h3>
+      <!-- Sinon, affiche le reste du dashboard -->
+      <ng-container *ngIf="activeView !== 'candidat-decision'">
+        <!-- Section d'accueil -->
+        <div *ngIf="activeView === 'dashboard'">
+          <!-- Welcome Section, Stats, Quick Actions, Recent Applications... -->
+          <!-- ...copie ici le contenu de la vue d'accueil... -->
         </div>
 
-        <div class="quick-actions-grid">
-          <div
-            *ngFor="let action of quickActions"
-            class="action-card"
-            [class]="action.color"
-            (click)="navigateTo(action.route)">
-            <div class="action-icon">
-              <ion-icon [name]="action.icon"></ion-icon>
-            </div>
-            <div class="action-content">
-              <h4>{{ action.title }}</h4>
-              <p>{{ action.subtitle }}</p>
-            </div>
-            <ion-icon name="chevron-forward" class="action-arrow"></ion-icon>
-          </div>
-        </div>
-      </div>
+        <!-- Mes candidatures -->
+        <!-- <app-mes-candidatures *ngIf="activeView === 'mes-candidatures'"></app-mes-candidatures> -->
 
-      <!-- Recent Applications -->
-      <div class="section">
-        <div class="section-header">
-          <h3>Candidatures récentes</h3>
-          <ion-button
-            fill="clear"
-            size="small"
-            routerLink="/dashboard/candidat/mes-candidatures">
-            Voir tout
-            <ion-icon name="arrow-forward" slot="end"></ion-icon>
-          </ion-button>
-        </div>
+        <!-- Mon profil -->
+        <!-- <app-profil *ngIf="activeView === 'profil'"></app-profil> -->
 
-        <div class="applications-list">
-          <div
-            *ngFor="let app of recentApplications"
-            class="application-card">
-            <div class="app-logo">
-              <ion-icon [name]="app.logo"></ion-icon>
-            </div>
-            <div class="app-content">
-              <h4>{{ app.position }}</h4>
-              <p>{{ app.company }}</p>
-              <small>{{ app.date | date:'dd/MM/yyyy' }}</small>
-            </div>
-            <ion-chip
-              [color]="getStatusColor(app.status)"
-              class="status-chip">
-              {{ getStatusText(app.status) }}
-            </ion-chip>
-          </div>
-        </div>
-      </div>
+        <!-- Entretiens -->
+        <!-- <app-entretiens *ngIf="activeView === 'entretiens'"></app-entretiens> -->
 
-      <!-- Bottom Spacing -->
-      <div class="bottom-spacing"></div>
+        <!-- Notifications -->
+        <!-- <app-notifications *ngIf="activeView === 'notifications'"></app-notifications> -->
+      </ng-container>
     </ion-content>
   </div>
+  <button #mainFocusTrap style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;" tabindex="-1"></button>
 </ion-app>

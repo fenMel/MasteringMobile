@@ -1,7 +1,7 @@
 ion-card {
   margin: 16px;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 ion-card-title {
@@ -17,16 +17,14 @@ ion-item {
   background: #f8f9fa;
 }
 
-ion-label {
-  p {
-    margin: 2px 0;
-    font-size: 1rem;
-  }
-  .verdict {
-    font-weight: bold;
-    color: #3880ff;
-    margin-top: 8px;
-  }
+ion-label p {
+  margin: 2px 0;
+  font-size: 1rem;
+}
+ion-label .verdict {
+  font-weight: bold;
+  color: #3880ff;
+  margin-top: 8px;
 }
 
 .no-results {

@@ -71,6 +71,7 @@ var forms_1 = require("@angular/forms");
 var rxjs_1 = require("rxjs");
 var gestion_evaluation_component_1 = require("../gestion-evaluation/gestion-evaluation.component");
 var decision_component_1 = require("../decision/decision.component");
+var voir_decision_component_1 = require("../voir-decision/voir-decision.component"); // <-- AJOUT
 var CoordinatorDashboardComponent = /** @class */ (function () {
     function CoordinatorDashboardComponent(modalCtrl, alertCtrl, toastCtrl, evaluationState, router) {
         var _this = this;
@@ -179,10 +180,26 @@ var CoordinatorDashboardComponent = /** @class */ (function () {
         this.showToast = false;
         this.toastMessage = '';
         this.toastColor = 'success';
+        // Dans le parent (ex: dashboard ou page principale)
+        this.menuActif = 'liste'; // ou 'voir-decision'
+        this.decisionSelectionnee = null; // <-- AJOUT
+        // Dans le parent (ex: dashboard ou page principale)
+        this.setSousMenu = function (menu, decision) {
+            _this.menuActif = menu;
+            if (decision) {
+                _this.decisionSelectionnee = decision;
+            }
+        };
         ionicons_1.addIcons({ homeOutline: icons_1.homeOutline, personOutline: icons_1.personOutline, peopleOutline: icons_1.peopleOutline, settingsOutline: icons_1.settingsOutline, logOutOutline: icons_1.logOutOutline, mailOutline: icons_1.mailOutline, callOutline: icons_1.callOutline, cameraOutline: icons_1.cameraOutline, saveOutline: icons_1.saveOutline, addOutline: icons_1.addOutline, createOutline: icons_1.createOutline, trashOutline: icons_1.trashOutline, calendarOutline: icons_1.calendarOutline, personCircleOutline: icons_1.personCircleOutline, notificationsOutline: icons_1.notificationsOutline, cloudUploadOutline: icons_1.cloudUploadOutline, closeSharp: icons_1.closeSharp, closeOutline: icons_1.closeOutline, person: icons_1.person, folder: icons_1.folder, calendar: icons_1.calendar, notifications: icons_1.notifications, settings: icons_1.settings, logOut: icons_1.logOut, documentText: icons_1.documentText, time: icons_1.time, checkmarkCircle: icons_1.checkmarkCircle, briefcase: icons_1.briefcase, business: icons_1.business, chevronForward: icons_1.chevronForward, arrowForward: icons_1.arrowForward, home: icons_1.home, add: icons_1.add, search: icons_1.search, personCircle: icons_1.personCircle });
+        ionicons_1.addIcons({
+            'chevron-back-outline': icons_1.chevronBackOutline,
+            'chevron-forward-outline': icons_1.chevronForwardOutline,
+            'arrow-back': icons_1.arrowBack
+        });
     }
     CoordinatorDashboardComponent.prototype.ngOnInit = function () {
         this.checkThemePreference();
+        this.setSousMenu('liste');
     };
     // Theme Management
     CoordinatorDashboardComponent.prototype.toggleTheme = function () {
@@ -312,12 +329,11 @@ var CoordinatorDashboardComponent = /** @class */ (function () {
         // In a real app, this would open the device camera/gallery
         this.showToastMessage('Feature coming soon!', 'warning');
     };
-    // Helper Functions
-    CoordinatorDashboardComponent.prototype.getTotalStudentsCount = function () {
-        return this.students.length;
-    };
     CoordinatorDashboardComponent.prototype.getActiveStudentsCount = function () {
         return this.students.filter(function (s) { return s.status === 'active'; }).length;
+    };
+    CoordinatorDashboardComponent.prototype.getTotalStudentsCount = function () {
+        return this.students.length;
     };
     // UI Helpers
     CoordinatorDashboardComponent.prototype.showToastMessage = function (message, color) {
@@ -341,6 +357,31 @@ var CoordinatorDashboardComponent = /** @class */ (function () {
         // In a real app, this would navigate to login page
         localStorage.clear();
         this.router.navigate(['/login']);
+    };
+    // Méthode pour ouvrir le modal
+    CoordinatorDashboardComponent.prototype.openVoirDecision = function (decision) {
+        return __awaiter(this, void 0, void 0, function () {
+            var modal;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.modalCtrl.create({
+                            component: voir_decision_component_1.VoirDecisionComponent,
+                            componentProps: {
+                                evaluationResults: [decision],
+                                setSousMenu: function () { return modal.dismiss(); }
+                            },
+                            breakpoints: [0, 0.7, 1],
+                            initialBreakpoint: 0.7
+                        })];
+                    case 1:
+                        modal = _a.sent();
+                        return [4 /*yield*/, modal.present()];
+                    case 2:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
     };
     CoordinatorDashboardComponent = __decorate([
         core_1.Component({
@@ -373,6 +414,7 @@ var CoordinatorDashboardComponent = /** @class */ (function () {
                 standalone_1.IonToast,
                 gestion_evaluation_component_1.GestionEvaluationComponent,
                 decision_component_1.DecisionComponent,
+                voir_decision_component_1.VoirDecisionComponent,
                 standalone_1.IonToolbar, common_1.NgIf, forms_1.FormsModule, common_1.TitleCasePipe, standalone_1.IonAlert, standalone_1.IonAlert, standalone_1.IonApp, standalone_1.IonItemSliding, common_1.NgForOf, standalone_1.IonSpinner, standalone_1.IonDatetime
             ],
             providers: [

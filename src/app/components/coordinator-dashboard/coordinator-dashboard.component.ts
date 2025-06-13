@@ -55,8 +55,9 @@ import {
   home,
   add,
   search,
-  personCircle, logOutOutline, peopleOutline, mailOutline, callOutline, cameraOutline, createOutline, calendarOutline, personCircleOutline, notificationsOutline, cloudUploadOutline, closeSharp, closeOutline } from 'ionicons/icons';
-
+  personCircle, logOutOutline, peopleOutline, mailOutline, callOutline, cameraOutline, createOutline, calendarOutline, personCircleOutline, notificationsOutline, cloudUploadOutline, closeSharp, closeOutline,
+  chevronBackOutline, chevronForwardOutline, arrowBack 
+} from 'ionicons/icons';
 
 import { FormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
@@ -66,7 +67,10 @@ import {DataService} from "../../services/data.service";
 import { EvaluationComponent } from '../evaluation/evaluation.component';
 import { EvaluationStateService } from 'src/app/services/evaluation-state.service';
 import { GestionEvaluationComponent } from '../gestion-evaluation/gestion-evaluation.component';
-import{DecisionComponent} from "../decision/decision.component";
+import { DecisionComponent } from "../decision/decision.component";
+import { VoirDecisionComponent } from "../voir-decision/voir-decision.component"; // <-- AJOUT
+
+import { Decision } from '../decision/decision.model'; 
 
 @Component({
   selector: 'app-coordinator-dashboard',
@@ -98,6 +102,7 @@ import{DecisionComponent} from "../decision/decision.component";
     IonToast,
     GestionEvaluationComponent,
     DecisionComponent,
+    VoirDecisionComponent, 
     IonToolbar, NgIf, FormsModule, TitleCasePipe, IonAlert, IonAlert, IonApp, IonItemSliding, NgForOf, IonSpinner, IonDatetime
   ],
   providers: [
@@ -110,14 +115,10 @@ import{DecisionComponent} from "../decision/decision.component";
 export class CoordinatorDashboardComponent implements OnInit {
   private menuController = inject(MenuController);
 
-
   // Theme Management
   isDarkMode = false;
-
-   today = new Date();
-
+  today = new Date();
   formattedDate = this.today.toISOString().split('T')[0];
-
 
   private searchSubject = new Subject<string>();
 
@@ -226,6 +227,10 @@ export class CoordinatorDashboardComponent implements OnInit {
 
   public datetime!: string;
 
+  // Dans le parent (ex: dashboard ou page principale)
+  menuActif = 'liste'; // ou 'voir-decision'
+  decisionSelectionnee: Decision | null = null; // <-- AJOUT
+
   constructor(
     private modalCtrl: ModalController,
     private alertCtrl: AlertController,
@@ -233,18 +238,18 @@ export class CoordinatorDashboardComponent implements OnInit {
     private evaluationState: EvaluationStateService,
     private router: Router
   ) {
-
     addIcons({homeOutline,personOutline,peopleOutline,settingsOutline,logOutOutline,mailOutline,callOutline,cameraOutline,saveOutline,addOutline,createOutline,trashOutline,calendarOutline,personCircleOutline,notificationsOutline,cloudUploadOutline,closeSharp,closeOutline,person,folder,calendar,notifications,settings,logOut,documentText,time,checkmarkCircle,briefcase,business,chevronForward,arrowForward,home,add,search,personCircle});
+    addIcons({
+      'chevron-back-outline': chevronBackOutline,
+      'chevron-forward-outline': chevronForwardOutline,
+      'arrow-back': arrowBack
+    });
   }
-
 
   ngOnInit() {
     this.checkThemePreference();
-
-
+    this.setSousMenu('liste');
   }
-
-
 
   // Theme Management
   toggleTheme() {
@@ -252,8 +257,6 @@ export class CoordinatorDashboardComponent implements OnInit {
     document.body.classList.toggle('dark-theme', this.isDarkMode);
     localStorage.setItem('darkMode', this.isDarkMode.toString());
   }
-
-
 
   checkThemePreference() {
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
@@ -381,13 +384,12 @@ export class CoordinatorDashboardComponent implements OnInit {
     this.showToastMessage('Feature coming soon!', 'warning');
   }
 
-  // Helper Functions
-  getTotalStudentsCount() {
-    return this.students.length;
-  }
-
   getActiveStudentsCount() {
     return this.students.filter(s => s.status === 'active').length;
+  }
+
+  getTotalStudentsCount(): number {
+    return this.students.length;
   }
 
   // UI Helpers
@@ -407,5 +409,27 @@ export class CoordinatorDashboardComponent implements OnInit {
     // In a real app, this would navigate to login page
     localStorage.clear();
     this.router.navigate(['/login']);
+  }
+
+  // Dans le parent (ex: dashboard ou page principale)
+  setSousMenu = (menu: string, decision?: Decision) => {
+    this.menuActif = menu;
+    if (decision) {
+      this.decisionSelectionnee = decision;
+    }
+  };
+
+  // Méthode pour ouvrir le modal
+  async openVoirDecision(decision: any) {
+    const modal = await this.modalCtrl.create({
+      component: VoirDecisionComponent,
+      componentProps: {
+        evaluationResults: [decision],
+        setSousMenu: () => modal.dismiss()
+      },
+      breakpoints: [0, 0.7, 1],
+      initialBreakpoint: 0.7
+    });
+    await modal.present();
   }
 }

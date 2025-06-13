@@ -77,9 +77,9 @@
     </ion-content>
   </ion-menu>
 
-  <!-- Main Content -->
+  <!-- Main Cont -->
   <div class="ion-page" id="main-content">
-    <ion-header class="modern-header">
+    <ion-header class="modern-header" *ngIf="menuActif !== 'voir-decision'">
       <ion-toolbar class="header-toolbar">
         <ion-buttons slot="start">
           <ion-menu-button class="menu-toggle"></ion-menu-button>
@@ -93,9 +93,13 @@
       </ion-toolbar>
     </ion-header>
 
-    <ion-content class="dashboard-content" [fullscreen]="true">
+    <ion-content class="dashboard-content" [fullscreen]="true" *ngIf="menuActif !== 'voir-decision'">
       <app-gestion-evaluation *ngIf="activeView === 'gestionEvaluations'"></app-gestion-evaluation>
             <app-decision *ngIf="activeView === 'decision'"></app-decision>
+<!-- Affiche la liste des décisions dans le dashboard -->
+<app-decision></app-decision>
+
+
 
       <!-- Les autres vues restent inchangées -->
       <div *ngIf="activeView === 'home'">
@@ -348,6 +352,8 @@
         </ion-card>
       </div>
     </ion-content>
+
+   
   </div>
 </ion-split-pane>
 

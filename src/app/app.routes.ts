@@ -78,6 +78,16 @@ export const routes: Routes = [
     loadComponent: () => import('./components/decision/decision.component').then(m => m.DecisionComponent),
     canActivate: [AuthGuard]
   },
+     {
+    path: 'voir-decision/:id',
+    loadComponent: () => import('./components/voir-decision/voir-decision.component').then(m => m.VoirDecisionComponent),
+    canActivate: [AuthGuard]
+  },
+       {
+    path: 'candidat-decision/:id',
+    loadComponent: () => import('./components/candidat-decision/candidat-decision.component').then(m => m.CandidatDecisionComponent),
+    canActivate: [AuthGuard]
+  },
   {
     path: 'unauthorized',
     loadComponent: () => import('./components/unauthorized/unauthorized.component').then(m => m.UnauthorizedComponent)

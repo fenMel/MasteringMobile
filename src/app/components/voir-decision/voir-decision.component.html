@@ -1,3 +1,36 @@
-<p>
-  voir-decision works!
-</p>
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Décision</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="decision">
+  <ion-list>
+    <ion-item>
+      <ion-label>
+        <h2>{{ decision.candidat?.prenom }} {{ decision.candidat?.nom }}</h2>
+        <p>Jury : {{ decision.jury?.prenom }} {{ decision.jury?.nom }}</p>
+        <p>
+          Note finale :
+          <strong>
+            {{ (decision.evaluation && decision.evaluation.moyenne != null) ? (decision.evaluation.moyenne + '/20') : 'Non Évalué' }}
+          </strong>
+        </p>
+        <p>
+          Commentaire :
+          <em>{{ decision.commentaireFinal || 'Aucun' }}</em>
+        </p>
+      </ion-label>
+      <ion-badge slot="end" [color]="getStatutColor(decision)">
+        {{ decision.evaluation?.moyenne != null ? (decision.verdict || 'Non défini') : 'Non Évalué' }}
+      </ion-badge>
+    </ion-item>
+  </ion-list>
+
+  <ion-footer class="ion-padding" style="background: transparent; box-shadow: none;">
+    <ion-button expand="block" color="primary" (click)="retourArriere()">
+      <ion-icon name="arrow-back" slot="start"></ion-icon>
+      Retour
+    </ion-button>
+  </ion-footer>
+</ion-content>

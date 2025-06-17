@@ -58,3 +58,28 @@ ion-icon {
     min-width: 70px;
   }
 }
+
+ion-button[color="danger"] {
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  border-radius: 8px;
+  padding: 0 18px;
+  font-size: 1rem;
+
+  ion-icon {
+    margin-right: 6px;
+    font-size: 1.2em;
+    vertical-align: middle;
+  }
+}
+
+// Pour un effet d’ombre au survol
+ion-button[color="danger"]:hover {
+  box-shadow: 0 2px 8px rgba(255, 77, 79, 0.15);
+}
+
+// Pour le texte "Supprimer" en rouge si besoin
+.supprimer-text {
+  color: #ff4d4f;
+  font-weight: bold;
+}

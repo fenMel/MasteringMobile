@@ -270,5 +270,16 @@ export class AuthService {
     value: this.getCurrentUser()
   };
 
-
+getUserFullName(): string {
+  if (this.jwtToken == null) {
+    this.getTokenFromSessionStorage();
+  }
+  const jwtHelper = new JwtHelperService();
+  const decoded = jwtHelper.decodeToken(this.jwtToken);
+  console.log("Token décodé pour le nom complet:", decoded);
+ if (decoded && decoded.prenom && decoded.nom) {
+  return decoded.prenom + ' ' + decoded.nom;
+}
+return decoded && decoded.sub ? decoded.sub : 'SYSTEM';
+}
 }

@@ -291,6 +291,18 @@ var AuthService = /** @class */ (function () {
         this.jwtToken = null;
         this.currentUser = null;
     };
+    AuthService.prototype.getUserFullName = function () {
+        if (this.jwtToken == null) {
+            this.getTokenFromSessionStorage();
+        }
+        var jwtHelper = new angular_jwt_1.JwtHelperService();
+        var decoded = jwtHelper.decodeToken(this.jwtToken);
+        console.log("Token décodé pour le nom complet:", decoded);
+        if (decoded && decoded.prenom && decoded.nom) {
+            return decoded.prenom + ' ' + decoded.nom;
+        }
+        return decoded && decoded.sub ? decoded.sub : 'SYSTEM';
+    };
     AuthService = __decorate([
         core_1.Injectable({
             providedIn: 'root'

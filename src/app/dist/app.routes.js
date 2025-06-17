@@ -89,6 +89,11 @@ exports.routes = [
         canActivate: [AuthGuard_1.AuthGuard]
     },
     {
+        path: 'archive-decision/:id',
+        loadComponent: function () { return Promise.resolve().then(function () { return require('./components/archive-decision/archive-decision.component'); }).then(function (m) { return m.ArchiveDecisionComponent; }); },
+        canActivate: [AuthGuard_1.AuthGuard]
+    },
+    {
         path: 'unauthorized',
         loadComponent: function () { return Promise.resolve().then(function () { return require('./components/unauthorized/unauthorized.component'); }).then(function (m) { return m.UnauthorizedComponent; }); }
     },

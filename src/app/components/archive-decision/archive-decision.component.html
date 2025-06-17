@@ -1,0 +1,38 @@
+<!-- Décisions archivées (version mobile Ionic) -->
+<ion-card>
+  <ion-card-header>
+    <ion-card-title>Décisions archivées</ion-card-title>
+  </ion-card-header>
+  <ion-card-content>
+    <ion-list>
+      <ion-item *ngFor="let archive of archives">
+        <ion-label>
+          <h3>
+            {{ archive.candidatPrenom }} {{ archive.candidatNom }}
+            <small *ngIf="archive.candidatId" style="font-size:0.8em;">(ID: {{ archive.candidatId }})</small>
+          </h3>
+          <p><strong>Jury :</strong> {{ archive.juryPrenom }} {{ archive.juryNom }}
+            <small *ngIf="archive.juryId">(ID: {{ archive.juryId }})</small>
+          </p>
+          <p><strong>Moyenne :</strong> {{ archive.moyenne }}</p>
+          <p><strong>Commentaire :</strong> {{ archive.commentaire }}</p>
+          <p>
+            <strong>Verdict :</strong>
+            <span [ngClass]="{
+              'status-green': archive.verdict === 'ADMIS',
+              'status-red': archive.verdict === 'NON_ADMIS',
+              'status-blue': archive.verdict === 'RATTRAPAGE'
+            }">
+              {{ archive.verdict }}
+            </span>
+          </p>
+          <p><strong>Date archivage :</strong> {{ archive.dateArchivage | date:'short' }}</p>
+          <p><strong>Archivé par :</strong> {{ archive.archivePar }}</p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+    <ion-text color="medium" *ngIf="!archives?.length">
+      Aucune décision archivée.
+    </ion-text>
+  </ion-card-content>
+</ion-card>

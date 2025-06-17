@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DecisionService } from '../../services/decision.service';
 import { Decision } from '../decision/decision.model';
 import { Location } from '@angular/common';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-voir-decision',
@@ -18,14 +19,40 @@ import { Location } from '@angular/common';
 })
 export class VoirDecisionComponent implements OnInit {
   @Input() decision: Decision | null = null;
-
+  @Input() evaluationResults: any[] = [];
+  @Input() setSousMenu: any;
   constructor(
     private route: ActivatedRoute,
     private decisionService: DecisionService,
     private router: Router,
+        private decisionsService: DecisionService,
+  
+    private authService: AuthService,
     private location: Location
   ) {}
+supprimerDecision(id: number) {
+    const nomPrenom = this.authService.getUserFullName();
+    console.log('Nom/prénom envoyé au backend :', nomPrenom);
+    this.decisionsService.deleteDecision(id, nomPrenom).subscribe({
+        next: () => {
+            console.log('Suppression réussie pour la décision', id);
+            this.evaluationResults = this.evaluationResults.filter(e => e.id !== id);
 
+                  this.retourArriere();
+
+        },
+        error: (err) => {
+            console.error('Erreur lors de la suppression :', err);
+            // Add specific error handling
+            if (err.status === 403) {
+                console.error('Accès refusé - permissions insuffisantes');
+            } else if (err.status === 404) {
+                console.error('Décision non trouvée');
+            }
+            // Show user-friendly error message
+        }
+    });
+}
   ngOnInit() {
     const navigation = this.router.getCurrentNavigation();
     const stateDecision = navigation?.extras.state?.['decision'];

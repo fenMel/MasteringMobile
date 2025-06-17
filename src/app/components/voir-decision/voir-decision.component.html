@@ -27,10 +27,21 @@
     </ion-item>
   </ion-list>
 
-  <ion-footer class="ion-padding" style="background: transparent; box-shadow: none;">
-    <ion-button expand="block" color="primary" (click)="retourArriere()">
-      <ion-icon name="arrow-back" slot="start"></ion-icon>
-      Retour
-    </ion-button>
-  </ion-footer>
+ 
+
+<ion-footer class="ion-padding" style="background: transparent; box-shadow: none;">
+  <ion-button expand="block" color="primary" (click)="retourArriere()">
+    <ion-icon name="arrow-back" slot="start"></ion-icon>
+    Retour
+  </ion-button>
+  <ion-button
+    expand="block"
+    color="danger"
+    fill="outline"
+    style="margin-top: 12px;"
+    (click)="supprimerDecision(decision.id)">
+    <ion-icon name="trash" slot="start"></ion-icon>
+    Supprimer
+  </ion-button>
+</ion-footer>
 </ion-content>

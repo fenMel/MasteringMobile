@@ -56,8 +56,7 @@ import {
   add,
   search,
   personCircle, logOutOutline, peopleOutline, mailOutline, callOutline, cameraOutline, createOutline, calendarOutline, personCircleOutline, notificationsOutline, cloudUploadOutline, closeSharp, closeOutline,
-  chevronBackOutline, chevronForwardOutline, arrowBack 
-} from 'ionicons/icons';
+  chevronBackOutline, chevronForwardOutline, arrowBack, archive, clipboardOutline, documentTextOutline, archiveOutline } from 'ionicons/icons';
 
 import { FormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
@@ -71,6 +70,7 @@ import { DecisionComponent } from "../decision/decision.component";
 import { VoirDecisionComponent } from "../voir-decision/voir-decision.component"; // <-- AJOUT
 
 import { Decision } from '../decision/decision.model'; 
+import { ArchiveDecisionComponent } from '../archive-decision/archive-decision.component';
 
 @Component({
   selector: 'app-coordinator-dashboard',
@@ -103,6 +103,7 @@ import { Decision } from '../decision/decision.model';
     GestionEvaluationComponent,
     DecisionComponent,
     VoirDecisionComponent, 
+    ArchiveDecisionComponent,
     IonToolbar, NgIf, FormsModule, TitleCasePipe, IonAlert, IonAlert, IonApp, IonItemSliding, NgForOf, IonSpinner, IonDatetime
   ],
   providers: [

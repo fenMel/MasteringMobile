@@ -88,6 +88,11 @@ export const routes: Routes = [
     loadComponent: () => import('./components/candidat-decision/candidat-decision.component').then(m => m.CandidatDecisionComponent),
     canActivate: [AuthGuard]
   },
+       {
+    path: 'archive-decision/:id',
+    loadComponent: () => import('./components/archive-decision/archive-decision.component').then(m => m.ArchiveDecisionComponent),
+    canActivate: [AuthGuard]
+  },
   {
     path: 'unauthorized',
     loadComponent: () => import('./components/unauthorized/unauthorized.component').then(m => m.UnauthorizedComponent)

@@ -67,17 +67,7 @@ export class DecisionService {
     );
   }
 
-  deleteDecision(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/api/decisions/${id}`, {
-      headers: this.getAuthHeaders()
-    }).pipe(
-      catchError(error => {
-        console.error('Erreur lors de la suppression de la décision:', error);
-        return of(null);
-      })
-    );
-  }
-
+ 
  getDecisionById(id: number): Observable<Decision | null> {
   return this.http.get<Decision>(`${this.apiUrl}/api/decisions/${id}`, {
     headers: this.getAuthHeaders() // doit inclure Authorization si besoin
@@ -88,5 +78,15 @@ export class DecisionService {
     })
   );
 }
-
+ /**
+   * Supprime une décision et envoie le nom/prénom de l'utilisateur dans le header X-User.
+   * @param id ID de la décision à supprimer
+   * @param utilisateur Nom et prénom de l'utilisateur (string)
+   * @returns Observable du résultat de la requête
+   */
+  deleteDecision(id: number, utilisateur: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/api/decisions/${id}`, {
+      headers: this.getAuthHeaders().set('X-User', utilisateur)
+    });
+  }
 }

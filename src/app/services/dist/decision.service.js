@@ -56,14 +56,6 @@ var DecisionService = /** @class */ (function () {
             return rxjs_1.of(null);
         }));
     };
-    DecisionService.prototype.deleteDecision = function (id) {
-        return this.http["delete"](this.apiUrl + "/api/decisions/" + id, {
-            headers: this.getAuthHeaders()
-        }).pipe(operators_1.catchError(function (error) {
-            console.error('Erreur lors de la suppression de la décision:', error);
-            return rxjs_1.of(null);
-        }));
-    };
     DecisionService.prototype.getDecisionById = function (id) {
         return this.http.get(this.apiUrl + "/api/decisions/" + id, {
             headers: this.getAuthHeaders() // doit inclure Authorization si besoin
@@ -71,6 +63,17 @@ var DecisionService = /** @class */ (function () {
             console.error('Erreur lors de la récupération de la décision:', error);
             return rxjs_1.of(null);
         }));
+    };
+    /**
+      * Supprime une décision et envoie le nom/prénom de l'utilisateur dans le header X-User.
+      * @param id ID de la décision à supprimer
+      * @param utilisateur Nom et prénom de l'utilisateur (string)
+      * @returns Observable du résultat de la requête
+      */
+    DecisionService.prototype.deleteDecision = function (id, utilisateur) {
+        return this.http["delete"](this.apiUrl + "/api/decisions/" + id, {
+            headers: this.getAuthHeaders().set('X-User', utilisateur)
+        });
     };
     DecisionService = __decorate([
         core_1.Injectable({ providedIn: 'root' })

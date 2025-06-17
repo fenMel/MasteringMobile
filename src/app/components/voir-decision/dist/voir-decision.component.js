@@ -11,13 +11,39 @@ var core_1 = require("@angular/core");
 var common_1 = require("@angular/common");
 var angular_1 = require("@ionic/angular");
 var VoirDecisionComponent = /** @class */ (function () {
-    function VoirDecisionComponent(route, decisionService, router, location) {
+    function VoirDecisionComponent(route, decisionService, router, decisionsService, authService, location) {
         this.route = route;
         this.decisionService = decisionService;
         this.router = router;
+        this.decisionsService = decisionsService;
+        this.authService = authService;
         this.location = location;
         this.decision = null;
+        this.evaluationResults = [];
     }
+    VoirDecisionComponent.prototype.supprimerDecision = function (id) {
+        var _this = this;
+        var nomPrenom = this.authService.getUserFullName();
+        console.log('Nom/prénom envoyé au backend :', nomPrenom);
+        this.decisionsService.deleteDecision(id, nomPrenom).subscribe({
+            next: function () {
+                console.log('Suppression réussie pour la décision', id);
+                _this.evaluationResults = _this.evaluationResults.filter(function (e) { return e.id !== id; });
+                _this.retourArriere();
+            },
+            error: function (err) {
+                console.error('Erreur lors de la suppression :', err);
+                // Add specific error handling
+                if (err.status === 403) {
+                    console.error('Accès refusé - permissions insuffisantes');
+                }
+                else if (err.status === 404) {
+                    console.error('Décision non trouvée');
+                }
+                // Show user-friendly error message
+            }
+        });
+    };
     VoirDecisionComponent.prototype.ngOnInit = function () {
         var _this = this;
         var _a;
@@ -50,6 +76,12 @@ var VoirDecisionComponent = /** @class */ (function () {
     __decorate([
         core_1.Input()
     ], VoirDecisionComponent.prototype, "decision");
+    __decorate([
+        core_1.Input()
+    ], VoirDecisionComponent.prototype, "evaluationResults");
+    __decorate([
+        core_1.Input()
+    ], VoirDecisionComponent.prototype, "setSousMenu");
     VoirDecisionComponent = __decorate([
         core_1.Component({
             selector: 'app-voir-decision',

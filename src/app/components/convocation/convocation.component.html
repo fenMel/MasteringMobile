@@ -1,0 +1,40 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Envoi Convocation</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form (ngSubmit)="envoyerConvocation()">
+    <ion-list lines="full">
+      <ion-item>
+        <ion-label position="floating">🆔 Mail Utilisateur</ion-label>
+        <ion-input type="email" [(ngModel)]="convocation.email" name="userId" required></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label  position="floating">📌 Titre du projet</ion-label>
+        <ion-input type="text" [(ngModel)]="convocation.title" name="title" required></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">📅 Date</ion-label>
+        <ion-datetime presentation="date" [(ngModel)]="convocation.date" name="date" required></ion-datetime>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">🕑 Heure</ion-label>
+        <ion-datetime presentation="time" [(ngModel)]="convocation.heure" name="heure" required></ion-datetime>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">📍 Lieu</ion-label>
+        <ion-input type="text" [(ngModel)]="convocation.lieu" name="lieu" required></ion-input>
+      </ion-item>
+    </ion-list>
+
+    <ion-button expand="block" type="submit" class="ion-margin-top" color="primary">
+      ✉️ Envoyer la convocation
+    </ion-button>
+  </form>
+</ion-content>

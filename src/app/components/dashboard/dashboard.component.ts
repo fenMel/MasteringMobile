@@ -12,20 +12,20 @@ import {AuthService} from "../../services/auth.service";
   styleUrls: ['./dashboard.component.scss'],
   standalone: true,
   imports: [
-    CommonModule,
-    IonHeader,
-    IonToolbar,
-    IonTitle,
-    IonContent,
-    IonCard,
-    IonCardHeader,
-    IonCardTitle,
-    IonCardSubtitle,
-    IonCardContent,
-    IonButtons,
-    IonButton,
-    IonIcon,
-    IonMenuButton
+      CommonModule,
+      IonHeader,
+      IonToolbar,
+      IonTitle,
+      IonContent,
+      IonCard,
+      IonCardHeader,
+      IonCardTitle,
+      IonCardSubtitle,
+      IonCardContent,
+      IonButtons,
+      IonButton,
+      IonIcon,
+      IonMenuButton
   ]
 })
 export class DashboardComponent implements OnInit {

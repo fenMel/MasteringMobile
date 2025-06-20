@@ -69,8 +69,10 @@ import { GestionEvaluationComponent } from '../gestion-evaluation/gestion-evalua
 import { DecisionComponent } from "../decision/decision.component";
 import { VoirDecisionComponent } from "../voir-decision/voir-decision.component"; // <-- AJOUT
 
-import { Decision } from '../decision/decision.model'; 
+import { Decision } from '../decision/decision.model';
 import { ArchiveDecisionComponent } from '../archive-decision/archive-decision.component';
+import {ConvocationComponent} from "../convocation/convocation.component";
+
 
 @Component({
   selector: 'app-coordinator-dashboard',
@@ -102,10 +104,11 @@ import { ArchiveDecisionComponent } from '../archive-decision/archive-decision.c
     IonToast,
     GestionEvaluationComponent,
     DecisionComponent,
-    VoirDecisionComponent, 
+    VoirDecisionComponent,
     ArchiveDecisionComponent,
-    IonToolbar, NgIf, FormsModule, TitleCasePipe, IonAlert, IonAlert, IonApp, IonItemSliding, NgForOf, IonSpinner, IonDatetime
-  ],
+    IonToolbar, NgIf, FormsModule, TitleCasePipe, IonAlert, IonAlert, IonApp, IonItemSliding, NgForOf, IonSpinner, IonDatetime,
+    ConvocationComponent
+],
   providers: [
     ModalController,
     ToastController,
